@@ -50,6 +50,7 @@
     <button class="tab" role="tab" aria-selected="false" data-tab="pass">Password</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="text">Text Tools</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="resize">Image Resizer</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="ai">Ask AI</button>
   </div>
 
   <!-- AD SLOT 1: paste your ad code here after your ad account is approved -->
@@ -141,6 +142,16 @@
     <div class="res" id="r-msg"></div>
   </section>
 
+  <!-- Ask AI -->
+  <section class="card" id="tab-ai" hidden>
+    <h2>Ask AI (study helper)</h2>
+    <p class="sub">Ask a question or paste a topic. The first time, a free Puter sign-in window opens. Each user uses their own free Puter account, so this costs the site owner nothing. AI answers can be wrong — double-check important facts.</p>
+    <label for="ai-q">Your question</label>
+    <textarea id="ai-q" placeholder="e.g. Explain osmosis in simple words"></textarea>
+    <button class="go" id="ai-go">Ask</button>
+    <div class="res" id="ai-res" style="white-space:pre-wrap">The answer will appear here.</div>
+  </section>
+
   <!-- AD SLOT 2 -->
   <div class="ad">Ad space</div>
 </main>
@@ -155,6 +166,7 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script>
 (function(){
   var $=function(id){return document.getElementById(id);};
@@ -299,6 +311,29 @@
       var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=rName+'-'+w+'x'+h+'.png';a.click();
       $('r-msg').textContent='Done: '+w+' × '+h+' px';
     },'image/png');
+  });
+  // ---------- ask AI (Puter.js, user-pays) ----------
+  function aiText(r){
+    if(typeof r==='string')return r;
+    if(r&&r.message){
+      var c=r.message.content;
+      if(typeof c==='string')return c;
+      if(Array.isArray(c))return c.map(function(x){return x&&x.text?x.text:'';}).join('');
+    }
+    return r&&r.toString?r.toString():'';
+  }
+  $('ai-go').addEventListener('click',async function(){
+    var q=$('ai-q').value.trim(),out=$('ai-res'),btn=this;
+    if(!q){out.textContent='Please type a question.';return;}
+    if(typeof puter==='undefined'||!puter.ai){out.textContent='AI service could not load. Check your internet and reload.';return;}
+    btn.disabled=true;out.textContent='Thinking...';
+    try{
+      var r=await puter.ai.chat('You are a helpful study assistant for students. Answer clearly and briefly.\n\nQuestion: '+q);
+      out.textContent=aiText(r)||'No answer received. Try again.';
+    }catch(e){
+      out.textContent='Could not get an answer. If a sign-in window was closed, try again and sign in.';
+    }
+    btn.disabled=false;
   });
 })();
 </script>
