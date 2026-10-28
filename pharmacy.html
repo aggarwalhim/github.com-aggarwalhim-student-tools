@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pharmacy Student Tools</title>
+<meta name="description" content="Free pharmacy student tools: molarity, normality and dilution calculator, dose by weight, alligation and percentage strength, drug flashcards and a viva question bank.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#7a4fe0;--accent-d:#5f38c2;--line:#e1e5ee;--warn:#fff4e0;--warn-t:#7a4a00;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#9b7bff;--accent-d:#b9a2ff;--line:#2b3240;--warn:#3a2d12;--warn-t:#ffd58a;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
+  nav{padding-top:14px;font-size:.92rem}
+  nav a{margin-right:12px}
+  header{padding-top:14px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  h3{margin:18px 0 4px;font-size:1rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:12px 0 6px;font-weight:600;font-size:.92rem}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  textarea{min-height:80px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px;white-space:pre-wrap}
+  .warn{margin:12px 0;padding:10px 12px;border-radius:8px;background:var(--warn);color:var(--warn-t);font-size:.92rem}
+  .flash{margin-top:12px;min-height:150px;border:2px solid var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;font-size:1.2rem;cursor:pointer;user-select:none}
+  .qa{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px}
+  .qa b{display:block}
+  .qa .ans{margin-top:6px;color:var(--muted)}
+  .tag{font-size:.78rem;color:var(--accent);font-weight:600}
+  a{color:var(--accent)}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<nav><a href="index.html">Student Tools</a><a href="pharmacy.html"><strong>Pharmacy</strong></a><a href="files.html">File &amp; Image Tools</a></nav>
+<header>
+  <h1>Pharmacy Student Tools</h1>
+  <p class="sub">Calculators and study banks for B.Pharm / D.Pharm students. Everything runs on your device.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="sol">Molarity / Normality</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="dil">Dilution</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="dose">Dose by Weight</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="allig">Alligation / % Strength</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="flash">Drug Flashcards</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="viva">Viva Questions</button>
+  </div>
+
+  <!-- AD SLOT 1 -->
+  <div class="ad">Ad space</div>
+
+  <!-- Molarity / Normality -->
+  <section class="card" id="tab-sol">
+    <h2>Molarity &amp; Normality Calculator</h2>
+    <p class="sub">How many grams to weigh for a solution — or what concentration you made.</p>
+    <div class="row">
+      <div><label for="s-mw">Molecular weight (g/mol)</label><input id="s-mw" type="number" step="any" min="0" placeholder="e.g. 58.44 for NaCl"></div>
+      <div><label for="s-n">n-factor (equivalents per mole)</label><input id="s-n" type="number" step="any" min="0" value="1"></div>
+    </div>
+    <div class="row">
+      <div><label for="s-v">Volume (mL)</label><input id="s-v" type="number" step="any" min="0" placeholder="e.g. 500"></div>
+      <div><label for="s-c">Concentration wanted</label>
+        <div class="row"><input id="s-c" type="number" step="any" min="0" placeholder="e.g. 0.1"><select id="s-u"><option value="M">M (molar)</option><option value="N">N (normal)</option></select></div>
+      </div>
+    </div>
+    <button class="go" id="s-go1">Grams needed</button>
+    <label for="s-m">Or: mass of substance you dissolved (g)</label>
+    <input id="s-m" type="number" step="any" min="0">
+    <button class="go alt" id="s-go2">Find concentration</button>
+    <div class="res" id="s-res"></div>
+    <p class="sub" style="margin-top:8px">Formulae: grams = M × MW × V(L) &nbsp;|&nbsp; N = M × n-factor &nbsp;|&nbsp; Equivalent weight = MW ÷ n-factor.</p>
+  </section>
+
+  <!-- Dilution -->
+  <section class="card" id="tab-dil" hidden>
+    <h2>Dilution Calculator (C₁V₁ = C₂V₂)</h2>
+    <p class="sub">Fill any <strong>three</strong> boxes and leave one empty. Use the same unit for both concentrations and both volumes.</p>
+    <div class="row">
+      <div><label for="d-c1">C₁ (stock concentration)</label><input id="d-c1" type="number" step="any" min="0"></div>
+      <div><label for="d-v1">V₁ (stock volume needed)</label><input id="d-v1" type="number" step="any" min="0"></div>
+    </div>
+    <div class="row">
+      <div><label for="d-c2">C₂ (final concentration)</label><input id="d-c2" type="number" step="any" min="0"></div>
+      <div><label for="d-v2">V₂ (final volume)</label><input id="d-v2" type="number" step="any" min="0"></div>
+    </div>
+    <button class="go" id="d-go">Calculate</button>
+    <div class="res" id="d-res"></div>
+  </section>
+
+  <!-- Dose by weight -->
+  <section class="card" id="tab-dose" hidden>
+    <h2>Dose-by-Weight Calculator</h2>
+    <div class="warn"><strong>For learning only.</strong> Do not use this to dose a real patient. Always check the dose with a doctor, pharmacist or an approved reference (drug label, pharmacopoeia, formulary).</div>
+    <div class="row">
+      <div><label for="o-w">Body weight (kg)</label><input id="o-w" type="number" step="any" min="0"></div>
+      <div><label for="o-d">Dose (mg per kg per dose)</label><input id="o-d" type="number" step="any" min="0"></div>
+    </div>
+    <div class="row">
+      <div><label for="o-f">Doses per day</label><input id="o-f" type="number" min="1" step="1" value="1"></div>
+      <div><label for="o-c">Liquid strength (mg per mL) — optional</label><input id="o-c" type="number" step="any" min="0" placeholder="e.g. 24 for 120 mg/5 mL"></div>
+    </div>
+    <div class="row">
+      <div><label for="o-mx">Max single dose (mg) — optional</label><input id="o-mx" type="number" step="any" min="0"></div>
+      <div><label for="o-md">Max daily dose (mg) — optional</label><input id="o-md" type="number" step="any" min="0"></div>
+    </div>
+    <button class="go" id="o-go">Calculate</button>
+    <div class="res" id="o-res"></div>
+  </section>
+
+  <!-- Alligation -->
+  <section class="card" id="tab-allig" hidden>
+    <h2>Alligation &amp; Percentage Strength</h2>
+
+    <h3>1. Alligation alternate (mixing two strengths to get a third)</h3>
+    <div class="row3">
+      <div><label for="a-h">Higher strength (%)</label><input id="a-h" type="number" step="any" min="0"></div>
+      <div><label for="a-l">Lower strength (%)</label><input id="a-l" type="number" step="any" min="0"></div>
+      <div><label for="a-d">Desired strength (%)</label><input id="a-d" type="number" step="any" min="0"></div>
+    </div>
+    <label for="a-q">Total quantity wanted (optional)</label>
+    <input id="a-q" type="number" step="any" min="0">
+    <button class="go" id="a-go">Calculate</button>
+    <div class="res" id="a-res"></div>
+
+    <h3>2. Alligation medial (strength of a mixture)</h3>
+    <div class="row"><input id="m-q1" type="number" step="any" min="0" placeholder="Quantity 1"><input id="m-s1" type="number" step="any" min="0" placeholder="Strength 1 (%)"></div>
+    <div class="row" style="margin-top:8px"><input id="m-q2" type="number" step="any" min="0" placeholder="Quantity 2"><input id="m-s2" type="number" step="any" min="0" placeholder="Strength 2 (%)"></div>
+    <div class="row" style="margin-top:8px"><input id="m-q3" type="number" step="any" min="0" placeholder="Quantity 3 (optional)"><input id="m-s3" type="number" step="any" min="0" placeholder="Strength 3 (%)"></div>
+    <button class="go" id="m-go">Calculate</button>
+    <div class="res" id="m-res"></div>
+
+    <h3>3. Percentage strength (w/v, w/w, v/v)</h3>
+    <div class="row">
+      <div><label for="p-t">Type</label><select id="p-t"><option value="w/v">w/v (g per 100 mL)</option><option value="w/w">w/w (g per 100 g)</option><option value="v/v">v/v (mL per 100 mL)</option></select></div>
+      <div><label for="p-tot">Total quantity of preparation (mL or g)</label><input id="p-tot" type="number" step="any" min="0"></div>
+    </div>
+    <div class="row">
+      <div><label for="p-amt">Amount of solute (g or mL)</label><input id="p-amt" type="number" step="any" min="0"></div>
+      <div><label for="p-pc">Percentage strength (%)</label><input id="p-pc" type="number" step="any" min="0"></div>
+    </div>
+    <p class="sub">Fill total + solute to get the %. Or fill total + % to get the solute needed.</p>
+    <button class="go" id="p-go">Calculate</button>
+    <div class="res" id="p-res"></div>
+  </section>
+
+  <!-- Flashcards -->
+  <section class="card" id="tab-flash" hidden>
+    <h2>Drug Name Flashcards</h2>
+    <p class="sub">Tap the card to flip it. Starter set — verify details with your textbook. You can add your own cards.</p>
+    <div class="flash" id="f-card" tabindex="0" role="button" aria-label="Flip card"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="go alt" id="f-prev">← Previous</button>
+      <button class="go alt" id="f-next">Next →</button>
+    </div>
+    <button class="go" id="f-shuf">Shuffle</button>
+    <div class="sub" id="f-count" style="margin-top:8px"></div>
+    <h3>Add your own card</h3>
+    <input id="f-new-q" type="text" placeholder="Drug name (front)">
+    <input id="f-new-a" type="text" placeholder="Class / use / key point (back)" style="margin-top:8px">
+    <button class="go alt" id="f-add">Add card (saved on this device)</button>
+  </section>
+
+  <!-- Viva -->
+  <section class="card" id="tab-viva" hidden>
+    <h2>Viva Question Bank</h2>
+    <p class="sub">Short starter questions with answers. Tap a question to show the answer. Verify with your syllabus and textbooks.</p>
+    <label for="v-sub">Subject</label>
+    <select id="v-sub"></select>
+    <div id="v-list"></div>
+    <h3>Add your own question</h3>
+    <select id="v-new-s"></select>
+    <input id="v-new-q" type="text" placeholder="Question" style="margin-top:8px">
+    <textarea id="v-new-a" placeholder="Answer" style="margin-top:8px"></textarea>
+    <button class="go alt" id="v-add">Add question (saved on this device)</button>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer>
+  <p>Educational use only. Not a substitute for textbooks, pharmacopoeias or professional advice.</p>
+</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function num(id){var v=parseFloat($(id).value);return isNaN(v)?null:v;}
+  function fmt(x){return +x.toPrecision(6);}
+  function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function load(k,d){try{var s=localStorage.getItem(k);return s?JSON.parse(s):d;}catch(e){return d;}}
+
+  // ---------- tabs ----------
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      tabs.forEach(function(x){
+        var on=x===t;x.setAttribute('aria-selected',on?'true':'false');
+        $('tab-'+x.dataset.tab).hidden=!on;
+      });
+    });
+  });
+
+  // ---------- molarity / normality ----------
+  function showConc(out,molar,n,mw,mass,vL){
+    var normal=molar*n,eq=mw/n;
+    out.textContent='Mass: '+fmt(mass)+' g in '+fmt(vL*1000)+' mL\nMolarity: '+fmt(molar)+' M\nNormality: '+fmt(normal)+' N\nEquivalent weight: '+fmt(eq)+' g/eq';
+  }
+  $('s-go1').addEventListener('click',function(){
+    var mw=num('s-mw'),n=num('s-n'),v=num('s-v'),c=num('s-c'),o=$('s-res');
+    if(!(mw>0)||!(n>0)||!(v>0)||c===null||c<0){o.textContent='Please fill molecular weight, n-factor, volume and concentration (all positive).';return;}
+    var vL=v/1000,molar=$('s-u').value==='M'?c:c/n,mass=molar*mw*vL;
+    showConc(o,molar,n,mw,mass,vL);
+  });
+  $('s-go2').addEventListener('click',function(){
+    var mw=num('s-mw'),n=num('s-n'),v=num('s-v'),m=num('s-m'),o=$('s-res');
+    if(!(mw>0)||!(n>0)||!(v>0)||!(m>0)){o.textContent='Please fill molecular weight, n-factor, volume and mass (all positive).';return;}
+    var vL=v/1000,molar=m/mw/vL;
+    showConc(o,molar,n,mw,m,vL);
+  });
+
+  // ---------- dilution ----------
+  $('d-go').addEventListener('click',function(){
+    var c1=num('d-c1'),v1=num('d-v1'),c2=num('d-c2'),v2=num('d-v2'),o=$('d-res');
+    var vals=[c1,v1,c2,v2],blank=vals.filter(function(x){return x===null;}).length;
+    if(blank!==1){o.textContent='Leave exactly one box empty and fill the other three.';return;}
+    if(vals.some(function(x){return x!==null&&x<=0;})){o.textContent='Values must be greater than zero.';return;}
+    var txt;
+    if(c1===null){c1=c2*v2/v1;txt='C₁ = '+fmt(c1);}
+    else if(v1===null){v1=c2*v2/c1;txt='V₁ = '+fmt(v1);}
+    else if(c2===null){c2=c1*v1/v2;txt='C₂ = '+fmt(c2);}
+    else{v2=c1*v1/c2;txt='V₂ = '+fmt(v2);}
+    if(v2<v1)txt+='\nNote: V₂ is smaller than V₁, so this would be a concentration, not a dilution.';
+    else txt+='\nTake '+fmt(v1)+' of stock and add solvent up to '+fmt(v2)+' (about '+fmt(v2-v1)+' of solvent).';
+    o.textContent=txt;
+  });
+
+  // ---------- dose by weight ----------
+  $('o-go').addEventListener('click',function(){
+    var w=num('o-w'),d=num('o-d'),f=num('o-f'),c=num('o-c'),mx=num('o-mx'),md=num('o-md'),o=$('o-res');
+    if(!(w>0)||!(d>0)||!(f>=1)){o.textContent='Please fill body weight, dose per kg and doses per day.';return;}
+    var dose=w*d,day=dose*f,t='Dose per time: '+fmt(dose)+' mg\nTotal per day: '+fmt(day)+' mg ('+f+' dose'+(f>1?'s':'')+')';
+    if(c>0)t+='\nVolume per dose: '+fmt(dose/c)+' mL (at '+fmt(c)+' mg/mL)';
+    if(mx>0&&dose>mx)t+='\n⚠ Calculated dose is above your max single dose ('+fmt(mx)+' mg). Do not exceed the maximum.';
+    if(md>0&&day>md)t+='\n⚠ Calculated daily total is above your max daily dose ('+fmt(md)+' mg). Do not exceed the maximum.';
+    t+='\n\nFor learning only — confirm with a doctor, pharmacist or approved reference.';
+    o.textContent=t;
+  });
+
+  // ---------- alligation ----------
+  $('a-go').addEventListener('click',function(){
+    var h=num('a-h'),l=num('a-l'),d=num('a-d'),q=num('a-q'),o=$('a-res');
+    if(h===null||l===null||d===null){o.textContent='Please fill higher, lower and desired strength.';return;}
+    if(!(l<d&&d<h)){o.textContent='Desired strength must be between the lower and the higher strength (lower < desired < higher).';return;}
+    var ph=d-l,pl=h-d,tot=h-l,t='Parts of '+fmt(h)+'% = '+fmt(ph)+'\nParts of '+fmt(l)+'% = '+fmt(pl)+'\nRatio (higher : lower) = '+fmt(ph)+' : '+fmt(pl);
+    if(q>0)t+='\n\nFor '+fmt(q)+' total:\n  '+fmt(q*ph/tot)+' of the '+fmt(h)+'% strength\n  '+fmt(q*pl/tot)+' of the '+fmt(l)+'% strength';
+    o.textContent=t;
+  });
+  $('m-go').addEventListener('click',function(){
+    var sumQ=0,sumQS=0,n=0,o=$('m-res');
+    for(var i=1;i<=3;i++){
+      var q=num('m-q'+i),s=num('m-s'+i);
+      if(q!==null&&s!==null&&q>0){sumQ+=q;sumQS+=q*s;n++;}
+    }
+    if(n<2){o.textContent='Fill at least two quantities with their strengths.';return;}
+    o.textContent='Total quantity: '+fmt(sumQ)+'\nStrength of mixture: '+fmt(sumQS/sumQ)+'%';
+  });
+  $('p-go').addEventListener('click',function(){
+    var t=$('p-t').value,tot=num('p-tot'),amt=num('p-amt'),pc=num('p-pc'),o=$('p-res');
+    if(!(tot>0)){o.textContent='Please enter the total quantity of the preparation.';return;}
+    if(amt!==null&&pc===null){
+      o.textContent='Strength = '+fmt(amt/tot*100)+'% '+t;
+    }else if(pc!==null&&amt===null){
+      var u=t==='v/v'?'mL':'g';
+      o.textContent='You need '+fmt(pc*tot/100)+' '+u+' of solute for '+fmt(tot)+(t==='w/w'?' g':' mL')+' of '+fmt(pc)+'% '+t+'.';
+    }else{o.textContent='Fill either (total + solute) or (total + percentage), not both.';}
+  });
+
+  // ---------- flashcards ----------
+  var baseCards=[
+    ['Paracetamol','Analgesic–antipyretic. Overdose antidote: N-acetylcysteine.'],
+    ['Ibuprofen','NSAID (propionic acid derivative). Pain, fever, inflammation.'],
+    ['Aspirin','NSAID; low dose is antiplatelet. Avoid in children with viral illness (Reye’s syndrome).'],
+    ['Amoxicillin','Penicillin (beta-lactam) antibiotic. Inhibits cell wall synthesis.'],
+    ['Ciprofloxacin','Fluoroquinolone antibiotic. Inhibits DNA gyrase.'],
+    ['Tetracycline','Antibiotic; inhibits 30S ribosome. Can stain developing teeth.'],
+    ['Metronidazole','Anti-protozoal / anaerobic antibacterial. Avoid alcohol (disulfiram-like reaction).'],
+    ['Isoniazid','Anti-TB drug. Neuropathy risk — give pyridoxine (vitamin B6).'],
+    ['Rifampicin','Anti-TB drug. Orange-red body fluids; enzyme inducer.'],
+    ['Chloroquine','Antimalarial (also used in amoebiasis, autoimmune disease).'],
+    ['Metformin','Biguanide; first-line antidiabetic for type 2 diabetes.'],
+    ['Glibenclamide','Sulfonylurea; increases insulin release. Risk of hypoglycaemia.'],
+    ['Insulin','Hormone for diabetes mellitus. Main risk: hypoglycaemia.'],
+    ['Atenolol','Selective beta-1 blocker. Hypertension, angina.'],
+    ['Amlodipine','Calcium channel blocker (dihydropyridine). Hypertension, angina.'],
+    ['Enalapril','ACE inhibitor. Common side effect: dry cough.'],
+    ['Furosemide','Loop diuretic; acts on thick ascending limb of loop of Henle.'],
+    ['Digoxin','Cardiac glycoside for heart failure / atrial fibrillation. Narrow therapeutic index.'],
+    ['Warfarin','Oral anticoagulant (vitamin K antagonist). Monitor INR. Antidote: vitamin K.'],
+    ['Heparin','Injectable anticoagulant. Antidote: protamine sulphate.'],
+    ['Omeprazole','Proton pump inhibitor. Reduces gastric acid; reflux and ulcers.'],
+    ['Salbutamol','Selective beta-2 agonist; bronchodilator in asthma.'],
+    ['Chlorpheniramine','First-generation H1 antihistamine. Causes drowsiness.'],
+    ['Cetirizine','Second-generation H1 antihistamine. Less sedating.'],
+    ['Diazepam','Benzodiazepine: anxiolytic, anticonvulsant, muscle relaxant. Antidote: flumazenil.'],
+    ['Phenytoin','Antiepileptic; blocks sodium channels. Gum overgrowth (gingival hyperplasia).'],
+    ['Morphine','Opioid analgesic (mu agonist). Antidote: naloxone.'],
+    ['Atropine','Muscarinic antagonist. Used in organophosphate poisoning.'],
+    ['Prednisolone','Corticosteroid; anti-inflammatory and immunosuppressant.'],
+    ['Levothyroxine','Thyroid hormone for hypothyroidism.']
+  ];
+  var custom=load('ph_cards',[]),cards=baseCards.concat(custom),fi=0,flipped=false;
+  function showCard(){
+    var c=cards[fi];
+    $('f-card').textContent=flipped?c[1]:c[0];
+    $('f-count').textContent='Card '+(fi+1)+' of '+cards.length+(flipped?' (answer)':' (tap to flip)');
+  }
+  $('f-card').addEventListener('click',function(){flipped=!flipped;showCard();});
+  $('f-card').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();flipped=!flipped;showCard();}});
+  $('f-next').addEventListener('click',function(){fi=(fi+1)%cards.length;flipped=false;showCard();});
+  $('f-prev').addEventListener('click',function(){fi=(fi-1+cards.length)%cards.length;flipped=false;showCard();});
+  $('f-shuf').addEventListener('click',function(){
+    for(var i=cards.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=cards[i];cards[i]=cards[j];cards[j]=t;}
+    fi=0;flipped=false;showCard();
+  });
+  $('f-add').addEventListener('click',function(){
+    var q=$('f-new-q').value.trim(),a=$('f-new-a').value.trim();
+    if(!q||!a)return;
+    custom.push([q,a]);store('ph_cards',custom);cards.push([q,a]);
+    $('f-new-q').value='';$('f-new-a').value='';fi=cards.length-1;flipped=false;showCard();
+  });
+  showCard();
+
+  // ---------- viva ----------
+  var subjects=['Pharmaceutics','Pharmacology','Pharmacognosy','Pharmaceutical Analysis'];
+  var baseQ=[
+    ['Pharmaceutics','What is a suspension?','A dispersion of finely divided insoluble solid particles in a liquid. It must be shaken before use.'],
+    ['Pharmaceutics','What is the difference between o/w and w/o emulsions?','In o/w the oil is dispersed in water (water is the continuous phase). In w/o water is dispersed in oil.'],
+    ['Pharmaceutics','What is HLB?','Hydrophilic–Lipophilic Balance: a scale (about 0–20) describing a surfactant’s affinity for water versus oil. It helps choose emulsifiers.'],
+    ['Pharmaceutics','Why are tablets coated?','To mask taste/odour, protect the drug from moisture, light and air, improve appearance, or control where the drug is released.'],
+    ['Pharmaceutics','Name the main tablet excipients.','Diluent (lactose), binder (starch paste, acacia), disintegrant (starch, croscarmellose), lubricant (magnesium stearate), glidant (talc).'],
+    ['Pharmaceutics','What is an isotonic solution?','A solution with the same osmotic pressure as body fluids, e.g. 0.9% w/v sodium chloride.'],
+    ['Pharmaceutics','What is the difference between disintegration and dissolution?','Disintegration: the tablet breaks into particles. Dissolution: the drug goes into solution in the medium.'],
+    ['Pharmacology','What is bioavailability?','The fraction of the administered dose that reaches the systemic circulation in unchanged form. IV = 100%.'],
+    ['Pharmacology','What is first-pass metabolism?','Metabolism of an oral drug in the gut wall and liver before it reaches systemic circulation, reducing bioavailability.'],
+    ['Pharmacology','What is the therapeutic index?','A measure of drug safety: ratio of the toxic (or lethal) dose to the effective dose (e.g. LD50/ED50). Larger means safer.'],
+    ['Pharmacology','What is the half-life of a drug?','The time taken for the plasma concentration of a drug to fall by half.'],
+    ['Pharmacology','Difference between agonist and antagonist?','An agonist binds and activates a receptor to produce an effect. An antagonist binds but does not activate, and blocks the agonist.'],
+    ['Pharmacology','Name some common antidotes.','Paracetamol – N-acetylcysteine; opioids – naloxone; heparin – protamine; warfarin – vitamin K; benzodiazepines – flumazenil; organophosphates – atropine and pralidoxime.'],
+    ['Pharmacology','Where do adrenergic receptors act?','Alpha-1: vasoconstriction. Beta-1: increases heart rate and force. Beta-2: bronchodilation.'],
+    ['Pharmacognosy','What is a crude drug?','A natural plant, animal or mineral material used in medicine in its raw or dried form, with little processing.'],
+    ['Pharmacognosy','What are alkaloids? Name a test.','Basic nitrogen-containing plant compounds, e.g. atropine, morphine, quinine. Tests: Dragendorff’s, Mayer’s and Wagner’s reagents.'],
+    ['Pharmacognosy','Which test detects deoxy sugars of cardiac glycosides?','Keller–Killiani test.'],
+    ['Pharmacognosy','Which test detects tannins?','Ferric chloride gives a blue-black or green colour; gelatin solution gives a precipitate.'],
+    ['Pharmacognosy','Match drug and main constituent.','Cinchona – quinine; Opium – morphine; Digitalis – digoxin/digitoxin; Senna – sennosides; Aloe – aloin; Turmeric – curcumin; Neem – azadirachtin; Tulsi – eugenol.'],
+    ['Pharmacognosy','What is adulteration of drugs?','Debasing a crude drug by substituting, adding or removing material so it no longer meets quality standards.'],
+    ['Pharmacognosy','How are crude drugs evaluated?','Organoleptic (colour, odour, taste), microscopic, physical (e.g. ash value, moisture), chemical and biological methods.'],
+    ['Pharmaceutical Analysis','What is a primary standard? Give examples.','A pure, stable substance of known composition used to prepare standard solutions directly, e.g. anhydrous sodium carbonate, potassium hydrogen phthalate. NaOH is a secondary standard.'],
+    ['Pharmaceutical Analysis','Define normality.','The number of gram equivalents of solute per litre of solution.'],
+    ['Pharmaceutical Analysis','Which indicator for strong acid vs strong base? Weak acid vs strong base?','Strong acid–strong base: methyl orange or phenolphthalein. Weak acid–strong base: phenolphthalein. Strong acid–weak base: methyl orange.'],
+    ['Pharmaceutical Analysis','State the Beer–Lambert law.','Absorbance is directly proportional to concentration and path length: A = εbc.'],
+    ['Pharmaceutical Analysis','Difference between accuracy and precision?','Accuracy: closeness to the true value. Precision: closeness of repeated measurements to each other.'],
+    ['Pharmaceutical Analysis','What is λmax?','The wavelength at which a substance shows maximum absorbance. Measurements are usually made at λmax.']
+  ];
+  var customQ=load('ph_viva',[]),allQ=baseQ.concat(customQ);
+  var vs=$('v-sub'),vn=$('v-new-s');
+  [vs,vn].forEach(function(sel,k){
+    if(k===0){var o=document.createElement('option');o.value='All';o.textContent='All subjects';sel.appendChild(o);}
+    subjects.forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);});
+  });
+  function renderViva(){
+    var box=$('v-list'),f=vs.value;box.innerHTML='';
+    allQ.forEach(function(x){
+      if(f!=='All'&&x[0]!==f)return;
+      var d=document.createElement('div');d.className='qa';
+      var tag=document.createElement('span');tag.className='tag';tag.textContent=x[0];
+      var q=document.createElement('b');q.textContent=x[1];q.style.cursor='pointer';
+      var a=document.createElement('div');a.className='ans';a.textContent=x[2];a.hidden=true;
+      q.addEventListener('click',function(){a.hidden=!a.hidden;});
+      d.appendChild(tag);d.appendChild(q);d.appendChild(a);box.appendChild(d);
+    });
+  }
+  vs.addEventListener('change',renderViva);
+  $('v-add').addEventListener('click',function(){
+    var q=$('v-new-q').value.trim(),a=$('v-new-a').value.trim(),s=vn.value;
+    if(!q||!a)return;
+    var item=[s,q,a];customQ.push(item);store('ph_viva',customQ);allQ.push(item);
+    $('v-new-q').value='';$('v-new-a').value='';renderViva();
+  });
+  renderViva();
+})();
+</script>
+</body>
+</html>

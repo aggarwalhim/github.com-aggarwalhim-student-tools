@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free File &amp; Image Tools</title>
+<meta name="description" content="Free file and image tools: crop and rotate images, remove plain backgrounds, split PDFs, text to PDF and passport photo maker. Files never leave your device.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#e0613a;--accent-d:#bf4a26;--line:#e1e5ee;--warn:#fff4e0;--warn-t:#7a4a00;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#ff8660;--accent-d:#ffa388;--line:#2b3240;--warn:#3a2d12;--warn-t:#ffd58a;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
+  nav{padding-top:14px;font-size:.92rem}
+  nav a{margin-right:12px}
+  header{padding-top:14px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:12px 0 6px;font-weight:600;font-size:.92rem}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  input[type=range]{padding:0}
+  input[type=checkbox]{width:auto}
+  textarea{min-height:160px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  button.go:disabled{opacity:.6;cursor:wait}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px}
+  .out{margin-top:12px;display:grid;gap:8px}
+  .out a{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:8px;text-decoration:none;word-break:break-all}
+  .warn{margin:12px 0;padding:10px 12px;border-radius:8px;background:var(--warn);color:var(--warn-t);font-size:.92rem}
+  canvas.pv{max-width:100%;height:auto;margin-top:12px;border:1px solid var(--line);border-radius:8px;touch-action:none;display:block}
+  canvas.checker{background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/16px 16px}
+  a{color:var(--accent)}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  [hidden]{display:none!important}
+  #print-area{display:none}
+  @media print{
+    body.printing>*:not(#print-area){display:none!important}
+    body.printing #print-area{display:block!important;white-space:pre-wrap;color:#000;background:#fff;font:12pt/1.5 system-ui,Arial,sans-serif}
+    body.printing{background:#fff}
+  }
+</style>
+</head>
+<body>
+<nav><a href="index.html">Student Tools</a><a href="pharmacy.html">Pharmacy</a><a href="files.html"><strong>File &amp; Image Tools</strong></a></nav>
+<header>
+  <h1>File &amp; Image Tools</h1>
+  <p class="sub">Crop, rotate, clean up and convert. Everything runs in your browser — files are never uploaded.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="crop">Crop &amp; Rotate</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="bg">Remove Plain Background</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="split">Split PDF</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="txt">Text to PDF</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pass">Passport Photo</button>
+  </div>
+
+  <!-- AD SLOT 1 -->
+  <div class="ad">Ad space</div>
+
+  <!-- Crop & rotate -->
+  <section class="card" id="tab-crop">
+    <h2>Image Cropper &amp; Rotator</h2>
+    <p class="sub">Choose an image, then drag on it to select the area to keep.</p>
+    <label for="c-file">Choose an image</label>
+    <input id="c-file" type="file" accept="image/*">
+    <canvas id="c-cv" class="pv" hidden></canvas>
+    <div id="c-ctl" hidden>
+      <div class="row">
+        <button class="go alt" id="c-rl">⟲ Rotate left</button>
+        <button class="go alt" id="c-rr">⟳ Rotate right</button>
+      </div>
+      <div class="row">
+        <button class="go alt" id="c-fh">⇋ Flip horizontal</button>
+        <button class="go alt" id="c-fv">⇅ Flip vertical</button>
+      </div>
+      <button class="go" id="c-crop">Crop to selection</button>
+      <button class="go alt" id="c-reset">Reset to original</button>
+      <div class="row">
+        <div><label for="c-fmt">Download as</label><select id="c-fmt"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option></select></div>
+        <div><button class="go" id="c-dl" style="margin-top:34px">Download</button></div>
+      </div>
+    </div>
+    <div class="res" id="c-msg"></div>
+  </section>
+
+  <!-- Background remover -->
+  <section class="card" id="tab-bg" hidden>
+    <h2>Remove Plain Background</h2>
+    <p class="sub">Works best on photos with a plain, even background (white sheet, signature on paper, scanned stamp). It is not an AI cut-out for busy backgrounds.</p>
+    <label for="b-file">Choose an image</label>
+    <input id="b-file" type="file" accept="image/*">
+    <canvas id="b-cv" class="pv checker" hidden></canvas>
+    <div id="b-ctl" hidden>
+      <p class="sub" style="margin-top:8px">Tap the picture to choose which colour to remove (default: top-left corner colour).</p>
+      <label for="b-tol">Strength: <span id="b-tol-v">30</span></label>
+      <input id="b-tol" type="range" min="1" max="100" value="30">
+      <button class="go" id="b-dl">Download transparent PNG</button>
+    </div>
+    <div class="res" id="b-msg"></div>
+  </section>
+
+  <!-- Split PDF -->
+  <section class="card" id="tab-split" hidden>
+    <h2>Split PDF &amp; Extract Pages</h2>
+    <label for="s-file">Choose a PDF</label>
+    <input id="s-file" type="file" accept="application/pdf">
+    <div class="res" id="s-info">No file chosen.</div>
+    <label for="s-range">Pages to extract (e.g. 1-3, 5, 8-10)</label>
+    <input id="s-range" type="text" placeholder="1-3, 5, 8-10">
+    <button class="go" id="s-ext">Extract these pages into one PDF</button>
+    <button class="go alt" id="s-all">Split every page into its own PDF</button>
+    <div class="res" id="s-msg"></div>
+    <div class="out" id="s-out"></div>
+  </section>
+
+  <!-- Text to PDF -->
+  <section class="card" id="tab-txt" hidden>
+    <h2>Text to PDF</h2>
+    <p class="sub">Type or paste notes and download them as a PDF.</p>
+    <label for="t-title">Title (optional)</label>
+    <input id="t-title" type="text">
+    <label for="t-body">Your notes</label>
+    <textarea id="t-body"></textarea>
+    <div class="row">
+      <div><label for="t-size">Font size</label><select id="t-size"><option>11</option><option selected>12</option><option>14</option><option>16</option></select></div>
+      <div></div>
+    </div>
+    <button class="go" id="t-dl">Download PDF (English text)</button>
+    <button class="go alt" id="t-print">Print / Save as PDF (any language, e.g. हिन्दी)</button>
+    <div class="res" id="t-msg">For Hindi or other languages, use the second button and choose “Save as PDF” in the print window.</div>
+  </section>
+
+  <!-- Passport photo -->
+  <section class="card" id="tab-pass" hidden>
+    <h2>Passport / Form Photo Maker</h2>
+    <label for="p-file">Choose a photo</label>
+    <input id="p-file" type="file" accept="image/*">
+    <label for="p-size">Photo size</label>
+    <select id="p-size">
+      <option value="35x45">35 × 45 mm (passport — India, UK, EU)</option>
+      <option value="51x51">51 × 51 mm (2 × 2 inch — USA)</option>
+      <option value="30x40">30 × 40 mm</option>
+      <option value="25x35">25 × 35 mm</option>
+    </select>
+    <canvas id="p-cv" class="pv" hidden style="max-height:360px;width:auto"></canvas>
+    <div id="p-ctl" hidden>
+      <label for="p-zoom">Zoom</label><input id="p-zoom" type="range" min="100" max="300" value="100">
+      <label for="p-x">Move left / right</label><input id="p-x" type="range" min="-100" max="100" value="0">
+      <label for="p-y">Move up / down</label><input id="p-y" type="range" min="-100" max="100" value="0">
+      <button class="go" id="p-one">Download single photo (PNG, 300 dpi)</button>
+      <label for="p-paper">Print sheet paper</label>
+      <select id="p-paper"><option value="4x6">4 × 6 inch (photo paper)</option><option value="a4">A4</option></select>
+      <button class="go alt" id="p-sheet">Download print sheet with many copies (JPG)</button>
+    </div>
+    <div class="warn">Check your exam / passport office rules for background colour, face size and pose. This tool only crops and resizes — it does not change the background.</div>
+    <div class="res" id="p-msg"></div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer>
+  <p>Privacy: all processing happens in your browser. Nothing is sent to a server.</p>
+</footer>
+
+<div id="print-area"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function setMsg(id,t,err){var e=$(id);e.textContent=t;e.style.color=err?'#d33':'';}
+  function baseName(n){return n.replace(/\.[^.]+$/,'');}
+  function loadImage(file){
+    return new Promise(function(res,rej){
+      var u=URL.createObjectURL(file),im=new Image();
+      im.onload=function(){URL.revokeObjectURL(u);res(im);};
+      im.onerror=function(){URL.revokeObjectURL(u);rej(new Error('Could not read this image.'));};
+      im.src=u;
+    });
+  }
+  function downloadBlob(blob,name){
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;
+    document.body.appendChild(a);a.click();a.remove();
+  }
+  function canvasBlob(cv,type,q){return new Promise(function(r){cv.toBlob(r,type,q);});}
+  function newCanvas(w,h){var c=document.createElement('canvas');c.width=w;c.height=h;return c;}
+
+  // ---------- tabs ----------
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      tabs.forEach(function(x){
+        var on=x===t;x.setAttribute('aria-selected',on?'true':'false');
+        $('tab-'+x.dataset.tab).hidden=!on;
+      });
+    });
+  });
+
+  // ================= CROP & ROTATE =================
+  var work=null,orig=null,name='image',sel=null,drag=null;
+  var cv=$('c-cv');
+  function drawCrop(){
+    if(!work)return;
+    cv.width=work.width;cv.height=work.height;
+    var ctx=cv.getContext('2d');ctx.drawImage(work,0,0);
+    if(sel&&sel.w>0&&sel.h>0){
+      ctx.fillStyle='rgba(0,0,0,.45)';
+      ctx.fillRect(0,0,cv.width,sel.y);
+      ctx.fillRect(0,sel.y+sel.h,cv.width,cv.height-sel.y-sel.h);
+      ctx.fillRect(0,sel.y,sel.x,sel.h);
+      ctx.fillRect(sel.x+sel.w,sel.y,cv.width-sel.x-sel.w,sel.h);
+      ctx.strokeStyle='#fff';ctx.lineWidth=Math.max(2,cv.width/300);
+      ctx.strokeRect(sel.x,sel.y,sel.w,sel.h);
+    }
+  }
+  function copyCanvas(src){var c=newCanvas(src.width,src.height);c.getContext('2d').drawImage(src,0,0);return c;}
+  function setWork(c){work=c;sel=null;drawCrop();setMsg('c-msg','Size: '+work.width+' × '+work.height+' px. Drag on the picture to select an area.');}
+  $('c-file').addEventListener('change',async function(){
+    var f=this.files[0];if(!f)return;
+    try{
+      var im=await loadImage(f);name=baseName(f.name);
+      var c=newCanvas(im.naturalWidth,im.naturalHeight);c.getContext('2d').drawImage(im,0,0);
+      orig=copyCanvas(c);cv.hidden=false;$('c-ctl').hidden=false;setWork(c);
+    }catch(e){setMsg('c-msg',e.message,true);}
+  });
+  function pt(e){
+    var r=cv.getBoundingClientRect(),k=cv.width/r.width;
+    return {x:Math.max(0,Math.min(cv.width,(e.clientX-r.left)*k)),y:Math.max(0,Math.min(cv.height,(e.clientY-r.top)*k))};
+  }
+  cv.addEventListener('pointerdown',function(e){if(!work)return;cv.setPointerCapture(e.pointerId);drag=pt(e);sel={x:drag.x,y:drag.y,w:0,h:0};});
+  cv.addEventListener('pointermove',function(e){
+    if(!drag)return;var p=pt(e);
+    sel={x:Math.min(drag.x,p.x),y:Math.min(drag.y,p.y),w:Math.abs(p.x-drag.x),h:Math.abs(p.y-drag.y)};drawCrop();
+  });
+  function endDrag(){drag=null;if(sel&&(sel.w<4||sel.h<4)){sel=null;drawCrop();}}
+  cv.addEventListener('pointerup',endDrag);cv.addEventListener('pointercancel',endDrag);
+  function rotate(dir){
+    var c=newCanvas(work.height,work.width),x=c.getContext('2d');
+    x.translate(c.width/2,c.height/2);x.rotate(dir*Math.PI/2);x.drawImage(work,-work.width/2,-work.height/2);
+    setWork(c);
+  }
+  function flip(h){
+    var c=newCanvas(work.width,work.height),x=c.getContext('2d');
+    if(h){x.translate(c.width,0);x.scale(-1,1);}else{x.translate(0,c.height);x.scale(1,-1);}
+    x.drawImage(work,0,0);setWork(c);
+  }
+  $('c-rl').addEventListener('click',function(){rotate(-1);});
+  $('c-rr').addEventListener('click',function(){rotate(1);});
+  $('c-fh').addEventListener('click',function(){flip(true);});
+  $('c-fv').addEventListener('click',function(){flip(false);});
+  $('c-reset').addEventListener('click',function(){if(orig)setWork(copyCanvas(orig));});
+  $('c-crop').addEventListener('click',function(){
+    if(!sel||sel.w<4||sel.h<4){setMsg('c-msg','Drag on the picture first to select the area to keep.',true);return;}
+    var x=Math.round(sel.x),y=Math.round(sel.y),w=Math.round(sel.w),h=Math.round(sel.h);
+    var c=newCanvas(w,h);c.getContext('2d').drawImage(work,x,y,w,h,0,0,w,h);setWork(c);
+  });
+  $('c-dl').addEventListener('click',async function(){
+    if(!work)return;
+    var type=$('c-fmt').value,out=work;
+    if(type==='image/jpeg'){out=newCanvas(work.width,work.height);var x=out.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,out.width,out.height);x.drawImage(work,0,0);}
+    var b=await canvasBlob(out,type,0.92);
+    downloadBlob(b,name+'-edited.'+(type==='image/png'?'png':'jpg'));
+  });
+
+  // ================= BACKGROUND REMOVER =================
+  var bImg=null,bData=null,bKey=null,bName='image',bcv=$('b-cv');
+  function applyBg(){
+    if(!bData)return;
+    var tol=parseInt($('b-tol').value,10)*4.4,band=tol*0.35+4;
+    var src=bData.data,out=new ImageData(bData.width,bData.height),d=out.data;
+    for(var i=0;i<src.length;i+=4){
+      var dr=src[i]-bKey[0],dg=src[i+1]-bKey[1],db=src[i+2]-bKey[2];
+      var dist=Math.sqrt(dr*dr+dg*dg+db*db),a=src[i+3];
+      if(dist<=tol)a=0;else if(dist<tol+band)a=Math.round(a*(dist-tol)/band);
+      d[i]=src[i];d[i+1]=src[i+1];d[i+2]=src[i+2];d[i+3]=a;
+    }
+    bcv.getContext('2d').putImageData(out,0,0);
+  }
+  $('b-file').addEventListener('change',async function(){
+    var f=this.files[0];if(!f)return;
+    try{
+      var im=await loadImage(f);bName=baseName(f.name);
+      var w=im.naturalWidth,h=im.naturalHeight,s=Math.min(1,3000/Math.max(w,h));
+      bcv.width=Math.round(w*s);bcv.height=Math.round(h*s);
+      var ctx=bcv.getContext('2d');ctx.drawImage(im,0,0,bcv.width,bcv.height);
+      bData=ctx.getImageData(0,0,bcv.width,bcv.height);
+      bKey=[bData.data[0],bData.data[1],bData.data[2]];
+      bcv.hidden=false;$('b-ctl').hidden=false;applyBg();
+      setMsg('b-msg','Removed colour: rgb('+bKey.join(', ')+'). Tap the picture to pick another colour.');
+    }catch(e){setMsg('b-msg',e.message,true);}
+  });
+  bcv.addEventListener('click',function(e){
+    if(!bData)return;
+    var r=bcv.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)*bcv.width/r.width),y=Math.floor((e.clientY-r.top)*bcv.height/r.height);
+    x=Math.max(0,Math.min(bcv.width-1,x));y=Math.max(0,Math.min(bcv.height-1,y));
+    var i=(y*bcv.width+x)*4;bKey=[bData.data[i],bData.data[i+1],bData.data[i+2]];applyBg();
+    setMsg('b-msg','Removed colour: rgb('+bKey.join(', ')+').');
+  });
+  $('b-tol').addEventListener('input',function(){$('b-tol-v').textContent=this.value;applyBg();});
+  $('b-dl').addEventListener('click',async function(){
+    if(!bData)return;var b=await canvasBlob(bcv,'image/png');downloadBlob(b,bName+'-nobg.png');
+  });
+
+  // ================= SPLIT PDF =================
+  var sBytes=null,sCount=0,sName='document';
+  // parse "1-3, 5, 8-10" into sorted-as-typed 0-based indices; returns null when invalid
+  function parseRanges(str,max){
+    var out=[],parts=str.split(',');
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i].trim();if(!p)continue;
+      var m=p.match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+      if(!m)return null;
+      var a=parseInt(m[1],10),b=m[2]?parseInt(m[2],10):a;
+      if(a<1||b<a||b>max)return null;
+      for(var k=a;k<=b;k++)out.push(k-1);
+    }
+    return out.length?out:null;
+  }
+  window.__parseRanges=parseRanges;
+  $('s-file').addEventListener('change',async function(){
+    var f=this.files[0];$('s-out').innerHTML='';if(!f)return;
+    try{
+      if(!window.PDFLib)throw new Error('PDF library could not load. Check your internet and reload.');
+      sBytes=await f.arrayBuffer();sName=baseName(f.name);
+      var d=await PDFLib.PDFDocument.load(sBytes);sCount=d.getPageCount();
+      $('s-info').textContent=f.name+' — '+sCount+' page'+(sCount===1?'':'s');
+    }catch(e){sBytes=null;$('s-info').textContent='Could not open this PDF (it may be locked or damaged).';}
+  });
+  async function makePdf(indices){
+    var src=await PDFLib.PDFDocument.load(sBytes),out=await PDFLib.PDFDocument.create();
+    var pages=await out.copyPages(src,indices);pages.forEach(function(p){out.addPage(p);});
+    return new Blob([await out.save()],{type:'application/pdf'});
+  }
+  function link(blob,fname){
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.textContent='Download '+fname;$('s-out').appendChild(a);
+  }
+  $('s-ext').addEventListener('click',async function(){
+    $('s-out').innerHTML='';
+    if(!sBytes){setMsg('s-msg','Please choose a PDF first.',true);return;}
+    var idx=parseRanges($('s-range').value,sCount);
+    if(!idx){setMsg('s-msg','Pages not understood. Use numbers like 1-3, 5 (between 1 and '+sCount+').',true);return;}
+    this.disabled=true;
+    try{link(await makePdf(idx),sName+'-pages.pdf');setMsg('s-msg','Done: '+idx.length+' page(s) extracted.');}
+    catch(e){setMsg('s-msg','Could not extract: '+e.message,true);}
+    this.disabled=false;
+  });
+  $('s-all').addEventListener('click',async function(){
+    $('s-out').innerHTML='';
+    if(!sBytes){setMsg('s-msg','Please choose a PDF first.',true);return;}
+    if(sCount>100){setMsg('s-msg','This PDF has more than 100 pages. Use the extract box instead.',true);return;}
+    this.disabled=true;
+    try{
+      for(var i=0;i<sCount;i++)link(await makePdf([i]),sName+'-page-'+(i+1)+'.pdf');
+      setMsg('s-msg','Done: '+sCount+' separate PDFs. Tap each link to download.');
+    }catch(e){setMsg('s-msg','Could not split: '+e.message,true);}
+    this.disabled=false;
+  });
+
+  // ================= TEXT TO PDF =================
+  $('t-dl').addEventListener('click',function(){
+    var body=$('t-body').value,title=$('t-title').value.trim();
+    if(!body.trim()){setMsg('t-msg','Please type some text first.',true);return;}
+    if(/[^\x00-\xFF]/.test(body+title)){setMsg('t-msg','This text has non-English letters that the PDF download cannot draw. Use “Print / Save as PDF” instead.',true);return;}
+    if(!window.jspdf){setMsg('t-msg','PDF library could not load. Check your internet and reload.',true);return;}
+    var doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'}),size=parseInt($('t-size').value,10);
+    var M=18,W=210-2*M,H=297,y=M,lh=size*0.5;
+    if(title){doc.setFont('helvetica','bold');doc.setFontSize(size+6);doc.text(doc.splitTextToSize(title,W),M,y+6);y+=14;}
+    doc.setFont('helvetica','normal');doc.setFontSize(size);
+    var lines=doc.splitTextToSize(body,W);
+    for(var i=0;i<lines.length;i++){
+      if(y+lh>H-M){doc.addPage();y=M;}
+      y+=lh;doc.text(lines[i],M,y);
+    }
+    downloadBlob(doc.output('blob'),(title?title.replace(/[^\w\- ]+/g,'').trim()||'notes':'notes')+'.pdf');
+    setMsg('t-msg','Done. Your PDF has been downloaded.');
+  });
+  $('t-print').addEventListener('click',function(){
+    var body=$('t-body').value,title=$('t-title').value.trim();
+    if(!body.trim()){setMsg('t-msg','Please type some text first.',true);return;}
+    var pa=$('print-area');pa.textContent='';
+    if(title){var h=document.createElement('h1');h.textContent=title;pa.appendChild(h);}
+    var p=document.createElement('div');p.textContent=body;p.style.fontSize=$('t-size').value+'pt';pa.appendChild(p);
+    document.body.classList.add('printing');
+    window.print();
+    setTimeout(function(){document.body.classList.remove('printing');},500);
+  });
+  window.addEventListener('afterprint',function(){document.body.classList.remove('printing');});
+
+  // ================= PASSPORT PHOTO =================
+  var pImg=null,pName='photo',pcv=$('p-cv');
+  function mmToPx(mm){return Math.round(mm/25.4*300);}
+  function sizePx(){var p=$('p-size').value.split('x');return [mmToPx(+p[0]),mmToPx(+p[1])];}
+  function renderPhoto(target){
+    var tw=target[0],th=target[1],c=newCanvas(tw,th),x=c.getContext('2d');
+    x.fillStyle='#fff';x.fillRect(0,0,tw,th);
+    if(!pImg)return c;
+    var iw=pImg.naturalWidth,ih=pImg.naturalHeight;
+    var s=Math.max(tw/iw,th/ih)*($('p-zoom').value/100),w=iw*s,h=ih*s;
+    var dx=(tw-w)/2+($('p-x').value/100)*Math.max(0,(w-tw)/2);
+    var dy=(th-h)/2+($('p-y').value/100)*Math.max(0,(h-th)/2);
+    x.drawImage(pImg,dx,dy,w,h);
+    return c;
+  }
+  function drawPreview(){
+    var t=sizePx(),c=renderPhoto(t);
+    pcv.width=t[0];pcv.height=t[1];pcv.getContext('2d').drawImage(c,0,0);
+  }
+  $('p-file').addEventListener('change',async function(){
+    var f=this.files[0];if(!f)return;
+    try{
+      pImg=await loadImage(f);pName=baseName(f.name);
+      $('p-zoom').value=100;$('p-x').value=0;$('p-y').value=0;
+      pcv.hidden=false;$('p-ctl').hidden=false;drawPreview();
+      setMsg('p-msg','Use the sliders to place the face in the frame.');
+    }catch(e){setMsg('p-msg',e.message,true);}
+  });
+  ['p-size','p-zoom','p-x','p-y'].forEach(function(id){$(id).addEventListener('input',function(){if(pImg)drawPreview();});});
+  $('p-one').addEventListener('click',async function(){
+    if(!pImg)return;var b=await canvasBlob(renderPhoto(sizePx()),'image/png');downloadBlob(b,pName+'-'+$('p-size').value+'mm.png');
+  });
+  $('p-sheet').addEventListener('click',async function(){
+    if(!pImg)return;
+    var t=sizePx(),photo=renderPhoto(t),paper=$('p-paper').value;
+    var SW=paper==='a4'?2480:1800,SH=paper==='a4'?3508:1200,margin=40,gap=24;
+    var cols=Math.floor((SW-2*margin+gap)/(t[0]+gap)),rows=Math.floor((SH-2*margin+gap)/(t[1]+gap));
+    if(cols<1||rows<1){setMsg('p-msg','This photo size does not fit on that paper.',true);return;}
+    var sheet=newCanvas(SW,SH),x=sheet.getContext('2d');
+    x.fillStyle='#fff';x.fillRect(0,0,SW,SH);
+    var gw=cols*t[0]+(cols-1)*gap,gh=rows*t[1]+(rows-1)*gap,ox=Math.round((SW-gw)/2),oy=Math.round((SH-gh)/2);
+    x.strokeStyle='#bbb';x.lineWidth=2;
+    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+      var px=ox+c*(t[0]+gap),py=oy+r*(t[1]+gap);
+      x.drawImage(photo,px,py);x.strokeRect(px,py,t[0],t[1]);
+    }
+    downloadBlob(await canvasBlob(sheet,'image/jpeg',0.95),pName+'-sheet-'+paper+'.jpg');
+    setMsg('p-msg','Sheet with '+(cols*rows)+' photos downloaded. Print at 100% / actual size (no “fit to page”).');
+  });
+})();
+</script>
+</body>
+</html>

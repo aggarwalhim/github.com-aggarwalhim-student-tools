@@ -36,6 +36,7 @@
 </style>
 </head>
 <body>
+<nav style="max-width:760px;margin:0 auto;padding:14px 16px 0;font-size:.92rem"><a href="index.html"><strong>Student Tools</strong></a> &nbsp; <a href="pharmacy.html">Pharmacy</a> &nbsp; <a href="files.html">File &amp; Image Tools</a></nav>
 <header>
   <h1>Free Student Tools</h1>
   <p class="sub">Handy tools for everyday study work. They run on your device — nothing is uploaded.</p>
@@ -50,6 +51,7 @@
     <button class="tab" role="tab" aria-selected="false" data-tab="pass">Password</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="text">Text Tools</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="resize">Image Resizer</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="notes">Notes</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="ai">Ask AI</button>
   </div>
 
@@ -140,6 +142,18 @@
     <label><input type="checkbox" id="r-lock" checked style="width:auto"> Keep proportions</label>
     <button class="go" id="r-go">Resize &amp; download</button>
     <div class="res" id="r-msg"></div>
+  </section>
+
+  <!-- Notes -->
+  <section class="card" id="tab-notes" hidden>
+    <h2>Notes Pad</h2>
+    <p class="sub">Type here — it saves automatically on this device and browser. Clearing browser data will erase it, so download a copy of anything important.</p>
+    <textarea id="n-text" style="min-height:240px" placeholder="Start typing your notes..."></textarea>
+    <div class="res" id="n-status">Nothing saved yet.</div>
+    <div class="btns">
+      <button class="go" id="n-dl">Download as .txt</button>
+      <button class="go" id="n-clear">Clear notes</button>
+    </div>
   </section>
 
   <!-- Ask AI -->
@@ -312,6 +326,25 @@
       $('r-msg').textContent='Done: '+w+' × '+h+' px';
     },'image/png');
   });
+  // ---------- notes pad (autosave) ----------
+  var nT=$('n-text'),nTimer=null;
+  try{var saved=localStorage.getItem('st_notes');if(saved){nT.value=saved;$('n-status').textContent='Loaded your saved notes.';}}catch(e){$('n-status').textContent='Auto-save is not available in this browser. Download your notes to keep them.';}
+  nT.addEventListener('input',function(){
+    clearTimeout(nTimer);
+    nTimer=setTimeout(function(){
+      try{localStorage.setItem('st_notes',nT.value);$('n-status').textContent='Saved '+new Date().toLocaleTimeString();}
+      catch(e){$('n-status').textContent='Could not auto-save. Download your notes to keep them.';}
+    },400);
+  });
+  $('n-dl').addEventListener('click',function(){
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([nT.value],{type:'text/plain'}));a.download='notes.txt';
+    document.body.appendChild(a);a.click();a.remove();
+  });
+  $('n-clear').addEventListener('click',function(){
+    if(!nT.value||!confirm('Clear all notes? This cannot be undone.'))return;
+    nT.value='';try{localStorage.removeItem('st_notes');}catch(e){}$('n-status').textContent='Notes cleared.';
+  });
+
   // ---------- ask AI (Puter.js, user-pays) ----------
   function aiText(r){
     if(typeof r==='string')return r;
