@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Student Tools</title>
+<meta name="description" content="Free student tools: QR code generator, word counter, age calculator, unit converter, password generator, text tools and image resizer. Works in your browser, nothing is uploaded.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#0f9d7a;--accent-d:#0b7c60;--line:#e1e5ee;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#2fcf9f;--accent-d:#58e0b6;--line:#2b3240;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer{max-width:760px;margin:0 auto;padding:0 16px}
+  header{padding-top:28px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:14px 0 6px;font-weight:600;font-size:.95rem}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  textarea{min-height:130px;resize:vertical}
+  input[type=range]{padding:0}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px}
+  .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  canvas{max-width:100%;height:auto;margin-top:12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  a{color:var(--accent)}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>Free Student Tools</h1>
+  <p class="sub">Handy tools for everyday study work. They run on your device — nothing is uploaded.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="qr">QR Code</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="words">Word Counter</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="age">Age / Dates</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="units">Unit Converter</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pass">Password</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="text">Text Tools</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="resize">Image Resizer</button>
+  </div>
+
+  <!-- AD SLOT 1: paste your ad code here after your ad account is approved -->
+  <div class="ad">Ad space</div>
+
+  <!-- QR -->
+  <section class="card" id="tab-qr">
+    <h2>QR Code Generator</h2>
+    <p class="sub">Turn any link or text into a QR code.</p>
+    <label for="qr-text">Text or link</label>
+    <input id="qr-text" type="text" placeholder="https://example.com">
+    <button class="go" id="qr-go">Make QR code</button>
+    <canvas id="qr-canvas" hidden></canvas>
+    <div class="res" id="qr-msg" hidden></div>
+    <button class="go" id="qr-save" hidden>Download PNG</button>
+  </section>
+
+  <!-- Word counter -->
+  <section class="card" id="tab-words" hidden>
+    <h2>Word &amp; Character Counter</h2>
+    <label for="w-text">Paste or type your text</label>
+    <textarea id="w-text"></textarea>
+    <div class="res" id="w-res">Words: 0 · Characters: 0 · Sentences: 0 · Reading time: 0 min</div>
+  </section>
+
+  <!-- Age / dates -->
+  <section class="card" id="tab-age" hidden>
+    <h2>Age &amp; Date Calculator</h2>
+    <label for="d-from">From date (e.g. date of birth)</label>
+    <input id="d-from" type="date">
+    <label for="d-to">To date (leave empty for today)</label>
+    <input id="d-to" type="date">
+    <button class="go" id="d-go">Calculate</button>
+    <div class="res" id="d-res"></div>
+  </section>
+
+  <!-- Units -->
+  <section class="card" id="tab-units" hidden>
+    <h2>Unit Converter</h2>
+    <label for="u-type">Type</label>
+    <select id="u-type"></select>
+    <div class="row">
+      <div><label for="u-val">Value</label><input id="u-val" type="number" value="1"></div>
+      <div><label for="u-from">From</label><select id="u-from"></select></div>
+    </div>
+    <label for="u-to">To</label>
+    <select id="u-to"></select>
+    <div class="res" id="u-res"></div>
+  </section>
+
+  <!-- Password -->
+  <section class="card" id="tab-pass" hidden>
+    <h2>Password Generator</h2>
+    <label for="pw-len">Length: <span id="pw-len-v">14</span></label>
+    <input id="pw-len" type="range" min="8" max="32" value="14">
+    <label><input type="checkbox" id="pw-sym" checked style="width:auto"> Include symbols (!@#$…)</label>
+    <button class="go" id="pw-go">Generate</button>
+    <div class="res" id="pw-res" style="font-family:monospace"></div>
+    <button class="go" id="pw-copy">Copy</button>
+  </section>
+
+  <!-- Text tools -->
+  <section class="card" id="tab-text" hidden>
+    <h2>Text Tools</h2>
+    <label for="t-in">Your text</label>
+    <textarea id="t-in"></textarea>
+    <div class="btns">
+      <button class="go" data-op="upper">UPPERCASE</button>
+      <button class="go" data-op="lower">lowercase</button>
+      <button class="go" data-op="title">Title Case</button>
+      <button class="go" data-op="spaces">Remove extra spaces</button>
+      <button class="go" data-op="lines">Remove empty lines</button>
+      <button class="go" data-op="sort">Sort lines A–Z</button>
+    </div>
+    <button class="go" id="t-copy">Copy result</button>
+  </section>
+
+  <!-- Image resizer -->
+  <section class="card" id="tab-resize" hidden>
+    <h2>Image Resizer</h2>
+    <label for="r-file">Choose an image</label>
+    <input id="r-file" type="file" accept="image/*">
+    <div class="row">
+      <div><label for="r-w">Width (px)</label><input id="r-w" type="number" min="1"></div>
+      <div><label for="r-h">Height (px)</label><input id="r-h" type="number" min="1"></div>
+    </div>
+    <label><input type="checkbox" id="r-lock" checked style="width:auto"> Keep proportions</label>
+    <button class="go" id="r-go">Resize &amp; download</button>
+    <div class="res" id="r-msg"></div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer>
+  <p><strong>Share this site:</strong>
+    <a id="sh-wa" href="#" target="_blank" rel="noopener">WhatsApp</a> ·
+    <a id="sh-tg" href="#" target="_blank" rel="noopener">Telegram</a> ·
+    <a href="#" id="sh-copy">Copy link</a>
+  </p>
+  <p>Privacy: everything happens in your browser. Nothing is sent to a server.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function copyText(t,done){
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){prompt('Copy this:',t);});}
+    else{prompt('Copy this:',t);}
+  }
+
+  // ---------- tabs ----------
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      tabs.forEach(function(x){
+        var on=x===t;x.setAttribute('aria-selected',on?'true':'false');
+        $('tab-'+x.dataset.tab).hidden=!on;
+      });
+    });
+  });
+
+  // ---------- share ----------
+  var url=location.href.split('#')[0],txt='Free student tools (QR code, word counter, unit converter and more): ';
+  $('sh-wa').href='https://wa.me/?text='+encodeURIComponent(txt+url);
+  $('sh-tg').href='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(txt);
+  $('sh-copy').addEventListener('click',function(e){e.preventDefault();var l=this;copyText(url,function(){l.textContent='Link copied!';});});
+
+  // ---------- QR ----------
+  $('qr-go').addEventListener('click',function(){
+    var v=$('qr-text').value.trim(),msg=$('qr-msg'),cv=$('qr-canvas');
+    msg.hidden=true;
+    if(!v){msg.textContent='Please type some text or a link.';msg.hidden=false;cv.hidden=true;$('qr-save').hidden=true;return;}
+    if(typeof qrcode==='undefined'){msg.textContent='QR library could not load. Check your internet and reload.';msg.hidden=false;return;}
+    try{
+      var q=qrcode(0,'M');q.addData(v);q.make();
+      var n=q.getModuleCount(),cell=8,pad=4*cell,size=n*cell+2*pad;
+      cv.width=cv.height=size;
+      var c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,size,size);c.fillStyle='#000';
+      for(var r=0;r<n;r++)for(var k=0;k<n;k++)if(q.isDark(r,k))c.fillRect(pad+k*cell,pad+r*cell,cell,cell);
+      cv.hidden=false;$('qr-save').hidden=false;
+    }catch(e){msg.textContent='Text is too long for a QR code.';msg.hidden=false;}
+  });
+  $('qr-save').addEventListener('click',function(){
+    var a=document.createElement('a');a.href=$('qr-canvas').toDataURL('image/png');a.download='qr-code.png';a.click();
+  });
+
+  // ---------- word counter ----------
+  $('w-text').addEventListener('input',function(){
+    var t=this.value,words=(t.trim().match(/\S+/g)||[]).length;
+    var sent=(t.match(/[^.!?]+[.!?]+/g)||[]).length;
+    $('w-res').textContent='Words: '+words+' · Characters: '+t.length+' · Sentences: '+sent+' · Reading time: '+Math.max(words?1:0,Math.round(words/200))+' min';
+  });
+
+  // ---------- age / dates ----------
+  $('d-go').addEventListener('click',function(){
+    var f=$('d-from').value,t=$('d-to').value,out=$('d-res');
+    if(!f){out.textContent='Please choose the From date.';return;}
+    var a=new Date(f+'T00:00:00'),b=t?new Date(t+'T00:00:00'):new Date();
+    b=new Date(b.getFullYear(),b.getMonth(),b.getDate());
+    var neg=b<a;if(neg){var x=a;a=b;b=x;}
+    var y=b.getFullYear()-a.getFullYear(),m=b.getMonth()-a.getMonth(),d=b.getDate()-a.getDate();
+    if(d<0){m--;d+=new Date(b.getFullYear(),b.getMonth(),0).getDate();}
+    if(m<0){y--;m+=12;}
+    var days=Math.round((b-a)/86400000);
+    out.textContent=y+' years, '+m+' months, '+d+' days  (total '+days+' days, about '+Math.floor(days/7)+' weeks)'+(neg?' — note: From date is after To date.':'');
+  });
+
+  // ---------- units ----------
+  var U={
+    Length:{m:1,km:1000,cm:0.01,mm:0.001,inch:0.0254,foot:0.3048,yard:0.9144,mile:1609.344},
+    Weight:{kg:1,g:0.001,mg:0.000001,tonne:1000,pound:0.45359237,ounce:0.028349523125},
+    Volume:{litre:1,ml:0.001,'US gallon':3.785411784,cup:0.2365882365,'fl oz':0.0295735295625},
+    Area:{'sq m':1,'sq km':1e6,'sq ft':0.09290304,acre:4046.8564224,hectare:10000},
+    Temperature:{'°C':1,'°F':1,'K':1}
+  };
+  var ut=$('u-type');
+  Object.keys(U).forEach(function(k){var o=document.createElement('option');o.textContent=k;ut.appendChild(o);});
+  function fillUnits(){
+    ['u-from','u-to'].forEach(function(id,i){
+      var s=$(id);s.innerHTML='';
+      Object.keys(U[ut.value]).forEach(function(k){var o=document.createElement('option');o.textContent=k;s.appendChild(o);});
+      s.selectedIndex=Math.min(i,s.options.length-1);
+    });
+    conv();
+  }
+  function conv(){
+    var v=parseFloat($('u-val').value),t=ut.value,f=$('u-from').value,g=$('u-to').value,r;
+    if(isNaN(v)){$('u-res').textContent='';return;}
+    if(t==='Temperature'){
+      var c=f==='°C'?v:f==='°F'?(v-32)*5/9:v-273.15;
+      r=g==='°C'?c:g==='°F'?c*9/5+32:c+273.15;
+    }else r=v*U[t][f]/U[t][g];
+    $('u-res').textContent=v+' '+f+' = '+(+r.toPrecision(8))+' '+g;
+  }
+  ut.addEventListener('change',fillUnits);
+  ['u-val','u-from','u-to'].forEach(function(i){$(i).addEventListener('input',conv);});
+  fillUnits();
+
+  // ---------- password ----------
+  $('pw-len').addEventListener('input',function(){$('pw-len-v').textContent=this.value;});
+  function gen(){
+    var set='abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'+($('pw-sym').checked?'!@#$%^&*-_?':'');
+    var n=parseInt($('pw-len').value,10),arr=new Uint32Array(n),out='';
+    crypto.getRandomValues(arr);
+    for(var i=0;i<n;i++)out+=set[arr[i]%set.length];
+    $('pw-res').textContent=out;
+  }
+  $('pw-go').addEventListener('click',gen);gen();
+  $('pw-copy').addEventListener('click',function(){var b=this;copyText($('pw-res').textContent,function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},1500);});});
+
+  // ---------- text tools ----------
+  var ops={
+    upper:function(s){return s.toUpperCase();},
+    lower:function(s){return s.toLowerCase();},
+    title:function(s){return s.toLowerCase().replace(/(^|\s)(\S)/g,function(m,a,b){return a+b.toUpperCase();});},
+    spaces:function(s){return s.replace(/[ \t]+/g,' ').replace(/^ +| +$/gm,'');},
+    lines:function(s){return s.split('\n').filter(function(l){return l.trim();}).join('\n');},
+    sort:function(s){return s.split('\n').sort(function(a,b){return a.localeCompare(b);}).join('\n');}
+  };
+  document.querySelectorAll('[data-op]').forEach(function(b){
+    b.addEventListener('click',function(){$('t-in').value=ops[b.dataset.op]($('t-in').value);});
+  });
+  $('t-copy').addEventListener('click',function(){var b=this;copyText($('t-in').value,function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy result';},1500);});});
+
+  // ---------- image resizer ----------
+  var rImg=null,rName='image';
+  $('r-file').addEventListener('change',function(){
+    var f=this.files[0];if(!f)return;
+    rName=f.name.replace(/\.[^.]+$/,'');
+    var u=URL.createObjectURL(f),im=new Image();
+    im.onload=function(){rImg=im;$('r-w').value=im.naturalWidth;$('r-h').value=im.naturalHeight;$('r-msg').textContent='Original size: '+im.naturalWidth+' × '+im.naturalHeight+' px';};
+    im.onerror=function(){$('r-msg').textContent='Could not read this image.';};
+    im.src=u;
+  });
+  $('r-w').addEventListener('input',function(){if(rImg&&$('r-lock').checked)$('r-h').value=Math.round(this.value*rImg.naturalHeight/rImg.naturalWidth)||'';});
+  $('r-h').addEventListener('input',function(){if(rImg&&$('r-lock').checked)$('r-w').value=Math.round(this.value*rImg.naturalWidth/rImg.naturalHeight)||'';});
+  $('r-go').addEventListener('click',function(){
+    var w=parseInt($('r-w').value,10),h=parseInt($('r-h').value,10);
+    if(!rImg){$('r-msg').textContent='Please choose an image first.';return;}
+    if(!(w>0&&h>0)||w>10000||h>10000){$('r-msg').textContent='Enter a width and height between 1 and 10000.';return;}
+    var c=document.createElement('canvas');c.width=w;c.height=h;
+    c.getContext('2d').drawImage(rImg,0,0,w,h);
+    c.toBlob(function(b){
+      var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=rName+'-'+w+'x'+h+'.png';a.click();
+      $('r-msg').textContent='Done: '+w+' × '+h+' px';
+    },'image/png');
+  });
+})();
+</script>
+</body>
+</html>
