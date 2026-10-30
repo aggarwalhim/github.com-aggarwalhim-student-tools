@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free PPT Tools for Students</title>
+<meta name="description" content="Free PowerPoint tools: images to PPT, text to PPT, PDF to PPT and extract text from PPTX. Runs in your browser, files are not uploaded.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#c43e1c;--accent-d:#9e2f13;--line:#e1e5ee;--warn:#fff4e0;--warn-t:#7a4a00;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#ff8a63;--accent-d:#ffa98b;--line:#2b3240;--warn:#3a2d12;--warn-t:#ffd58a;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
+  nav{padding-top:14px;font-size:.92rem}
+  nav a{margin-right:12px}
+  header{padding-top:14px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:12px 0 6px;font-weight:600;font-size:.92rem}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  textarea{min-height:200px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  button.go:disabled{opacity:.6;cursor:wait}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px}
+  .warn{margin:12px 0;padding:10px 12px;border-radius:8px;background:var(--warn);color:var(--warn-t);font-size:.92rem}
+  code{background:var(--bg);padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+  pre.ex{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto;font-size:.88rem;margin:8px 0 0}
+  a{color:var(--accent)}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<nav><a href="index.html">Student Tools</a><a href="study.html">Study</a><a href="pharmacy.html">Pharmacy</a><a href="files.html">File &amp; Image Tools</a><a href="ppt.html"><strong>PPT Tools</strong></a></nav>
+<header>
+  <h1>PPT Tools</h1>
+  <p class="sub">Make PowerPoint files, turn PDFs into slides, and pull the text out of a PPTX. Everything runs in your browser — files are not uploaded.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="img">Images → PPT</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="txt">Text → PPT</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pdf">PDF → PPT</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="ext">PPTX → Text</button>
+  </div>
+
+  <!-- AD SLOT 1 -->
+  <div class="ad">Ad space</div>
+
+  <section class="card" id="tab-img">
+    <h2>Images to PPT</h2>
+    <p class="sub">Each image becomes one slide (16:9), fitted without stretching.</p>
+    <label for="i-files">Choose images (in the order you want)</label>
+    <input id="i-files" type="file" accept="image/*" multiple>
+    <button class="go" id="i-go">Make PPT</button>
+    <div class="res" id="i-msg"></div>
+  </section>
+
+  <section class="card" id="tab-txt" hidden>
+    <h2>Text to PPT</h2>
+    <p class="sub">Separate slides with a line containing only <code>---</code>. The first line of each slide is its title; the other lines become bullet points.</p>
+    <pre class="ex">Cell Structure
+Nucleus controls the cell
+Mitochondria make energy
+---
+Photosynthesis
+Happens in chloroplasts
+Needs light, water and CO2</pre>
+    <label for="t-body">Your slides</label>
+    <textarea id="t-body"></textarea>
+    <button class="go" id="t-go">Make PPT</button>
+    <div class="res" id="t-msg"></div>
+  </section>
+
+  <section class="card" id="tab-pdf" hidden>
+    <h2>PDF to PPT</h2>
+    <div class="warn">Each PDF page becomes one slide as a <strong>picture</strong>. The text on the slides cannot be edited afterwards.</div>
+    <label for="p-file">Choose a PDF</label>
+    <input id="p-file" type="file" accept="application/pdf">
+    <button class="go" id="p-go">Make PPT</button>
+    <div class="res" id="p-msg">Up to 60 pages. Big PDFs can take a minute on a phone.</div>
+  </section>
+
+  <section class="card" id="tab-ext" hidden>
+    <h2>Extract text from a PPTX</h2>
+    <p class="sub">Choose a <code>.pptx</code> file and get all the slide text. Old <code>.ppt</code> files must first be saved as .pptx in PowerPoint.</p>
+    <label for="x-file">Choose a PPTX</label>
+    <input id="x-file" type="file" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+    <div class="res" id="x-msg"></div>
+    <textarea id="x-out" hidden readonly></textarea>
+    <div class="row">
+      <button class="go alt" id="x-copy" hidden>Copy text</button>
+      <button class="go" id="x-dl" hidden>Download .txt</button>
+    </div>
+  </section>
+
+  <div class="warn"><strong>Want PPT → PDF?</strong> A free website cannot do this well. Open the file in PowerPoint, Google Slides or the PowerPoint phone app and use <em>Save as / Download as → PDF</em>.</div>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer><p>Privacy: all processing happens in your browser. Nothing is sent to a server.</p></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@4.0.1/dist/pptxgen.bundle.js"></script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function setMsg(id,t,err){var e=$(id);e.textContent=t;e.style.color=err?'#d33':'';}
+  function baseName(n){return n.replace(/\.[^.]+$/,'');}
+  function downloadBlob(blob,name){
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;
+    document.body.appendChild(a);a.click();a.remove();
+  }
+  function needPptx(msgId){
+    if(typeof PptxGenJS==='undefined'){setMsg(msgId,'The PowerPoint library could not load. Check your internet and reload.',true);return false;}
+    return true;
+  }
+  function loadImage(file){
+    return new Promise(function(res,rej){
+      var u=URL.createObjectURL(file),im=new Image();
+      im.onload=function(){URL.revokeObjectURL(u);res(im);};
+      im.onerror=function(){URL.revokeObjectURL(u);rej(new Error('Could not read '+file.name));};
+      im.src=u;
+    });
+  }
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on?'true':'false');$('tab-'+x.dataset.tab).hidden=!on;});
+  });});
+
+  var SW=13.333,SH=7.5; // 16:9 slide in inches
+
+  // ---------- images to PPT ----------
+  $('i-go').addEventListener('click',async function(){
+    var files=$('i-files').files,btn=this;
+    if(!files.length){setMsg('i-msg','Please choose at least one image.',true);return;}
+    if(!needPptx('i-msg'))return;
+    btn.disabled=true;setMsg('i-msg','Working...');
+    try{
+      var pptx=new PptxGenJS();pptx.layout='LAYOUT_WIDE';
+      for(var i=0;i<files.length;i++){
+        var im=await loadImage(files[i]),w=im.naturalWidth,h=im.naturalHeight,k=Math.min(1,1920/Math.max(w,h));
+        var c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);
+        var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+        var s=Math.min(SW/c.width,SH/c.height),dw=c.width*s,dh=c.height*s;
+        pptx.addSlide().addImage({data:c.toDataURL('image/jpeg',0.9),x:(SW-dw)/2,y:(SH-dh)/2,w:dw,h:dh});
+      }
+      var blob=await pptx.write({outputType:'blob'});
+      downloadBlob(blob,'images.pptx');
+      setMsg('i-msg','Done: '+files.length+' slide(s). Your PPTX has been downloaded.');
+    }catch(e){setMsg('i-msg',e.message||'Something went wrong.',true);}
+    btn.disabled=false;
+  });
+
+  // ---------- text to PPT ----------
+  function parseSlides(text){
+    return text.split(/^\s*---\s*$/m).map(function(block){
+      var lines=block.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+      return {title:lines[0]||'',bullets:lines.slice(1)};
+    }).filter(function(s){return s.title;});
+  }
+  window.__parseSlides=parseSlides;
+  $('t-go').addEventListener('click',async function(){
+    var slides=parseSlides($('t-body').value),btn=this;
+    if(!slides.length){setMsg('t-msg','Please type at least one slide. The first line is the title.',true);return;}
+    if(!needPptx('t-msg'))return;
+    btn.disabled=true;
+    try{
+      var pptx=new PptxGenJS();pptx.layout='LAYOUT_WIDE';
+      slides.forEach(function(sl){
+        var s=pptx.addSlide();
+        s.addText(sl.title,{x:0.6,y:0.4,w:SW-1.2,h:1.1,fontSize:36,bold:true,color:'1F2A44',fontFace:'Calibri'});
+        if(sl.bullets.length){
+          s.addText(sl.bullets.map(function(b){return {text:b,options:{bullet:true,breakLine:true}};}),
+            {x:0.8,y:1.8,w:SW-1.6,h:SH-2.4,fontSize:24,color:'333333',fontFace:'Calibri',valign:'top',fit:'shrink'});
+        }
+      });
+      downloadBlob(await pptx.write({outputType:'blob'}),'slides.pptx');
+      setMsg('t-msg','Done: '+slides.length+' slide(s). Your PPTX has been downloaded.');
+    }catch(e){setMsg('t-msg',e.message||'Something went wrong.',true);}
+    btn.disabled=false;
+  });
+
+  // ---------- PDF to PPT (pdf.js loaded only when needed) ----------
+  var PDFJS_VER='6.2.108',pdfjsPromise=null;
+  function getPdfjs(){
+    if(!pdfjsPromise){
+      var base='https://cdn.jsdelivr.net/npm/pdfjs-dist@'+PDFJS_VER+'/legacy/build/';
+      pdfjsPromise=import(base+'pdf.min.mjs').then(function(m){m.GlobalWorkerOptions.workerSrc=base+'pdf.worker.min.mjs';return m;});
+      pdfjsPromise.catch(function(){pdfjsPromise=null;});
+    }
+    return pdfjsPromise;
+  }
+  window.__setPdfjsLoader=function(f){getPdfjs=f;};
+  $('p-go').addEventListener('click',async function(){
+    var f=$('p-file').files[0],btn=this;
+    if(!f){setMsg('p-msg','Please choose a PDF first.',true);return;}
+    if(!needPptx('p-msg'))return;
+    btn.disabled=true;setMsg('p-msg','Loading PDF reader...');
+    try{
+      var lib=await getPdfjs();
+      var doc=await lib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;
+      var n=doc.numPages;
+      if(n>60)throw new Error('This PDF has '+n+' pages. The limit is 60. Split it first using the Split PDF tool.');
+      var pptx=new PptxGenJS(),first=await doc.getPage(1),v1=first.getViewport({scale:1});
+      var W=SW,H=SW*v1.height/v1.width;
+      pptx.defineLayout({name:'PDFPAGE',width:W,height:H});pptx.layout='PDFPAGE';
+      for(var i=1;i<=n;i++){
+        setMsg('p-msg','Converting page '+i+' of '+n+'...');
+        var page=await doc.getPage(i),vp=page.getViewport({scale:1}),sc=Math.min(2,1600/vp.width);
+        vp=page.getViewport({scale:sc});
+        var c=document.createElement('canvas');c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+        var ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
+        await page.render({canvasContext:ctx,canvas:c,viewport:vp}).promise;
+        // fit each page inside the slide without stretching
+        var s=Math.min(W/c.width,H/c.height),dw=c.width*s,dh=c.height*s;
+        pptx.addSlide().addImage({data:c.toDataURL('image/jpeg',0.85),x:(W-dw)/2,y:(H-dh)/2,w:dw,h:dh});
+      }
+      downloadBlob(await pptx.write({outputType:'blob'}),baseName(f.name)+'.pptx');
+      setMsg('p-msg','Done: '+n+' slide(s). Your PPTX has been downloaded.');
+    }catch(e){
+      var m=e&&e.message?e.message:'';
+      setMsg('p-msg',/password/i.test(m)?'This PDF is password protected.':(m&&m.indexOf('limit')>-1?m:'Could not convert this PDF. Check your internet connection (the PDF reader loads online) and try again.'),true);
+    }
+    btn.disabled=false;
+  });
+
+  // ---------- PPTX to text ----------
+  async function extractPptx(buffer){
+    var zip=await JSZip.loadAsync(buffer);
+    var names=Object.keys(zip.files).filter(function(n){return /^ppt\/slides\/slide\d+\.xml$/.test(n);});
+    names.sort(function(a,b){return parseInt(a.match(/(\d+)\.xml$/)[1],10)-parseInt(b.match(/(\d+)\.xml$/)[1],10);});
+    if(!names.length)throw new Error('No slides found. Is this a real .pptx file?');
+    var out=[];
+    for(var i=0;i<names.length;i++){
+      var xml=await zip.files[names[i]].async('string');
+      var doc=new DOMParser().parseFromString(xml,'application/xml'),paras=doc.getElementsByTagNameNS('*','p'),lines=[];
+      for(var j=0;j<paras.length;j++){
+        var ts=paras[j].getElementsByTagNameNS('*','t'),line='';
+        for(var k=0;k<ts.length;k++)line+=ts[k].textContent;
+        if(line.trim())lines.push(line.trim());
+      }
+      out.push('--- Slide '+(i+1)+' ---\n'+(lines.length?lines.join('\n'):'(no text)'));
+    }
+    return out.join('\n\n');
+  }
+  $('x-file').addEventListener('change',async function(){
+    var f=this.files[0];if(!f)return;
+    ['x-out','x-copy','x-dl'].forEach(function(id){$(id).hidden=true;});
+    if(!/\.pptx$/i.test(f.name)){setMsg('x-msg','Please choose a .pptx file. Old .ppt files must be saved as .pptx in PowerPoint first.',true);return;}
+    if(typeof JSZip==='undefined'){setMsg('x-msg','The ZIP library could not load. Check your internet and reload.',true);return;}
+    setMsg('x-msg','Reading...');
+    try{
+      var text=await extractPptx(await f.arrayBuffer());
+      $('x-out').value=text;['x-out','x-copy','x-dl'].forEach(function(id){$(id).hidden=false;});
+      setMsg('x-msg','Done: '+(text.match(/--- Slide \d+ ---/g)||[]).length+' slide(s) read.');
+    }catch(e){setMsg('x-msg',e.message&&e.message.indexOf('No slides')===0?e.message:'Could not read this file. It may be damaged or password protected.',true);}
+  });
+  $('x-copy').addEventListener('click',function(){
+    var b=this,t=$('x-out').value;
+    function ok(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy text';},1500);}
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){$('x-out').select();});
+    else{$('x-out').select();}
+  });
+  $('x-dl').addEventListener('click',function(){
+    var f=$('x-file').files[0];downloadBlob(new Blob([$('x-out').value],{type:'text/plain'}),(f?baseName(f.name):'slides')+'.txt');
+  });
+})();
+</script>
+</body>
+</html>
