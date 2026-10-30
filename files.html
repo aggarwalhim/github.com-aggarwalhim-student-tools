@@ -50,7 +50,7 @@
 </style>
 </head>
 <body>
-<nav><a href="index.html">Student Tools</a><a href="pharmacy.html">Pharmacy</a><a href="files.html"><strong>File &amp; Image Tools</strong></a></nav>
+<nav><a href="index.html">Student Tools</a><a href="study.html">Study</a><a href="pharmacy.html">Pharmacy</a><a href="files.html"><strong>File &amp; Image Tools</strong></a></nav>
 <header>
   <h1>File &amp; Image Tools</h1>
   <p class="sub">Crop, rotate, clean up and convert. Everything runs in your browser — files are never uploaded.</p>
@@ -63,6 +63,8 @@
     <button class="tab" role="tab" aria-selected="false" data-tab="split">Split PDF</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="txt">Text to PDF</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="pass">Passport Photo</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="i2p">Images to PDF</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="merge">Merge PDFs</button>
   </div>
 
   <!-- AD SLOT 1 -->
@@ -165,6 +167,26 @@
     </div>
     <div class="warn">Check your exam / passport office rules for background colour, face size and pose. This tool only crops and resizes — it does not change the background.</div>
     <div class="res" id="p-msg"></div>
+  </section>
+
+  <!-- Images to PDF -->
+  <section class="card" id="tab-i2p" hidden>
+    <h2>Images to PDF</h2>
+    <p class="sub">Combine photos or scans into one PDF (one image per page, A4).</p>
+    <label for="i-files">Choose images (in the order you want)</label>
+    <input id="i-files" type="file" accept="image/*" multiple>
+    <button class="go" id="i-go">Make PDF</button>
+    <div class="res" id="i-msg"></div>
+  </section>
+
+  <!-- Merge PDFs -->
+  <section class="card" id="tab-merge" hidden>
+    <h2>Merge PDFs</h2>
+    <p class="sub">Join several PDF files into one. They are joined in the order you pick them.</p>
+    <label for="mg-files">Choose PDFs</label>
+    <input id="mg-files" type="file" accept="application/pdf" multiple>
+    <button class="go" id="mg-go">Merge</button>
+    <div class="res" id="mg-msg"></div>
   </section>
 
   <!-- AD SLOT 2 -->
@@ -448,6 +470,44 @@
     }
     downloadBlob(await canvasBlob(sheet,'image/jpeg',0.95),pName+'-sheet-'+paper+'.jpg');
     setMsg('p-msg','Sheet with '+(cols*rows)+' photos downloaded. Print at 100% / actual size (no “fit to page”).');
+  });
+  // ================= IMAGES TO PDF =================
+  $('i-go').addEventListener('click',async function(){
+    var files=$('i-files').files,btn=this;
+    if(!files.length){setMsg('i-msg','Please choose at least one image.',true);return;}
+    if(!window.jspdf){setMsg('i-msg','PDF library could not load. Check your internet and reload.',true);return;}
+    btn.disabled=true;setMsg('i-msg','Working...');
+    try{
+      var doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'}),PW=210,PH=297,M=10;
+      for(var i=0;i<files.length;i++){
+        var im=await loadImage(files[i]),c=newCanvas(im.naturalWidth,im.naturalHeight),x=c.getContext('2d');
+        x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0);
+        var r=Math.min((PW-2*M)/c.width,(PH-2*M)/c.height),w=c.width*r,h=c.height*r;
+        if(i>0)doc.addPage();
+        doc.addImage(c.toDataURL('image/jpeg',0.92),'JPEG',(PW-w)/2,(PH-h)/2,w,h);
+      }
+      downloadBlob(doc.output('blob'),'images.pdf');
+      setMsg('i-msg','Done: '+files.length+' page(s). Your PDF has been downloaded.');
+    }catch(e){setMsg('i-msg',e.message,true);}
+    btn.disabled=false;
+  });
+
+  // ================= MERGE PDFs =================
+  $('mg-go').addEventListener('click',async function(){
+    var files=$('mg-files').files,btn=this;
+    if(files.length<2){setMsg('mg-msg','Please choose at least two PDFs.',true);return;}
+    if(!window.PDFLib){setMsg('mg-msg','PDF library could not load. Check your internet and reload.',true);return;}
+    btn.disabled=true;setMsg('mg-msg','Working...');
+    try{
+      var out=await PDFLib.PDFDocument.create();
+      for(var i=0;i<files.length;i++){
+        var src=await PDFLib.PDFDocument.load(await files[i].arrayBuffer());
+        (await out.copyPages(src,src.getPageIndices())).forEach(function(p){out.addPage(p);});
+      }
+      downloadBlob(new Blob([await out.save()],{type:'application/pdf'}),'merged.pdf');
+      setMsg('mg-msg','Done: '+files.length+' PDFs merged and downloaded.');
+    }catch(e){setMsg('mg-msg','Could not merge (a PDF may be locked or damaged).',true);}
+    btn.disabled=false;
   });
 })();
 </script>

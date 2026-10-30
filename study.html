@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study Tools for Students</title>
+<meta name="description" content="Free study tools: exam countdown, flashcards, typing speed test, SGPA calculator, EMI, GST and discount calculators, BMI calculator. Works in your browser.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#d6336c;--accent-d:#b02557;--line:#e1e5ee;--good:#1a8f4d;--bad:#d33;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#ff6fa3;--accent-d:#ff94b9;--line:#2b3240;--good:#4cd48a;--bad:#ff7a7a;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
+  nav{padding-top:14px;font-size:.92rem}
+  nav a{margin-right:12px}
+  header{padding-top:14px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  h3{margin:18px 0 4px;font-size:1rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:12px 0 6px;font-weight:600;font-size:.92rem}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  textarea{min-height:110px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  button.sm{width:auto;margin:0;padding:6px 10px;font-size:.85rem}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px;white-space:pre-wrap}
+  .item{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px}
+  .item .d{font-weight:700;white-space:nowrap}
+  .flash{margin-top:12px;min-height:150px;border:2px solid var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;font-size:1.2rem;cursor:pointer;user-select:none;word-break:break-word}
+  .typebox{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);line-height:1.8;word-break:break-word}
+  .typebox .ok{color:var(--good)} .typebox .no{color:var(--bad);text-decoration:underline} .typebox .cur{background:rgba(214,51,108,.25)}
+  a{color:var(--accent)}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<nav><a href="index.html">Student Tools</a><a href="study.html"><strong>Study</strong></a><a href="pharmacy.html">Pharmacy</a><a href="files.html">File &amp; Image Tools</a></nav>
+<header>
+  <h1>Study Tools</h1>
+  <p class="sub">Countdowns, flashcards, typing practice and everyday calculators. Your data stays on your device.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="exam">Exam Countdown</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cards">Flashcards</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="type">Typing Test</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="sgpa">SGPA</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="money">EMI / GST / Discount</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="bmi">BMI</button>
+  </div>
+
+  <!-- AD SLOT 1 -->
+  <div class="ad">Ad space</div>
+
+  <!-- Exam countdown -->
+  <section class="card" id="tab-exam">
+    <h2>Exam Countdown</h2>
+    <p class="sub">Add your exams and see how many days are left. Saved on this device.</p>
+    <div class="row">
+      <div><label for="e-name">Subject / exam</label><input id="e-name" type="text" placeholder="e.g. Pharmacology"></div>
+      <div><label for="e-date">Date</label><input id="e-date" type="date"></div>
+    </div>
+    <button class="go" id="e-add">Add exam</button>
+    <div id="e-list"></div>
+  </section>
+
+  <!-- Flashcards -->
+  <section class="card" id="tab-cards" hidden>
+    <h2>Flashcards</h2>
+    <p class="sub">Paste your own cards, one per line as <b>question | answer</b>. Tap the card to flip it.</p>
+    <textarea id="f-bulk" placeholder="Capital of India | New Delhi&#10;Powerhouse of the cell | Mitochondria"></textarea>
+    <div class="row">
+      <button class="go" id="f-save">Save cards</button>
+      <button class="go alt" id="f-clear">Delete all</button>
+    </div>
+    <div class="flash" id="f-card" tabindex="0" role="button" aria-label="Flip card">No cards yet. Add some above.</div>
+    <div class="row">
+      <button class="go alt" id="f-prev">← Previous</button>
+      <button class="go alt" id="f-next">Next →</button>
+    </div>
+    <div class="row">
+      <button class="go alt" id="f-shuf">Shuffle</button>
+      <button class="go alt" id="f-know">I knew it ✓</button>
+    </div>
+    <div class="sub" id="f-count" style="margin-top:8px"></div>
+  </section>
+
+  <!-- Typing test -->
+  <section class="card" id="tab-type" hidden>
+    <h2>Typing Speed Test</h2>
+    <p class="sub">Type the text below. The timer starts when you press the first key.</p>
+    <div class="typebox" id="y-target"></div>
+    <label for="y-in">Type here</label>
+    <textarea id="y-in" autocomplete="off" autocapitalize="off" spellcheck="false" style="min-height:90px"></textarea>
+    <button class="go alt" id="y-new">New text / restart</button>
+    <div class="res" id="y-res">Speed: – WPM · Accuracy: –</div>
+  </section>
+
+  <!-- SGPA -->
+  <section class="card" id="tab-sgpa" hidden>
+    <h2>SGPA Calculator</h2>
+    <p class="sub">Enter credits and grade points for each subject (up to 8). Leave unused rows empty.</p>
+    <div id="g-rows"></div>
+    <button class="go" id="g-go">Calculate SGPA</button>
+    <div class="res" id="g-res"></div>
+  </section>
+
+  <!-- Money -->
+  <section class="card" id="tab-money" hidden>
+    <h2>EMI Calculator</h2>
+    <div class="row3">
+      <div><label for="m-p">Loan amount</label><input id="m-p" type="number" min="0" step="any"></div>
+      <div><label for="m-r">Interest % per year</label><input id="m-r" type="number" min="0" step="any"></div>
+      <div><label for="m-n">Months</label><input id="m-n" type="number" min="1" step="1"></div>
+    </div>
+    <button class="go" id="m-emi">Calculate EMI</button>
+    <div class="res" id="m-emi-res"></div>
+
+    <h3>GST Calculator</h3>
+    <div class="row3">
+      <div><label for="t-a">Amount</label><input id="t-a" type="number" min="0" step="any"></div>
+      <div><label for="t-r">GST %</label><input id="t-r" type="number" min="0" step="any" value="18"></div>
+      <div><label for="t-m">Mode</label><select id="t-m"><option value="add">Add GST</option><option value="rem">Remove GST (amount includes GST)</option></select></div>
+    </div>
+    <button class="go" id="t-go">Calculate GST</button>
+    <div class="res" id="t-res"></div>
+
+    <h3>Discount Calculator</h3>
+    <div class="row">
+      <div><label for="x-p">Original price</label><input id="x-p" type="number" min="0" step="any"></div>
+      <div><label for="x-d">Discount %</label><input id="x-d" type="number" min="0" max="100" step="any"></div>
+    </div>
+    <button class="go" id="x-go">Calculate</button>
+    <div class="res" id="x-res"></div>
+  </section>
+
+  <!-- BMI -->
+  <section class="card" id="tab-bmi" hidden>
+    <h2>BMI Calculator</h2>
+    <div class="row">
+      <div><label for="b-w">Weight (kg)</label><input id="b-w" type="number" min="0" step="any"></div>
+      <div><label for="b-h">Height (cm)</label><input id="b-h" type="number" min="0" step="any"></div>
+    </div>
+    <button class="go" id="b-go">Calculate BMI</button>
+    <div class="res" id="b-res"></div>
+    <p class="sub" style="margin-top:8px">General information only, not medical advice. BMI does not account for muscle, age or body type. Ask a doctor about your health.</p>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer><p>Everything runs in your browser. Nothing is sent to a server.</p></footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function num(id){var v=parseFloat($(id).value);return isNaN(v)?null:v;}
+  function fmt(x,d){return (+x.toFixed(d===undefined?2:d)).toLocaleString('en-IN');}
+  function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function load(k,d){try{var s=localStorage.getItem(k);return s?JSON.parse(s):d;}catch(e){return d;}}
+
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on?'true':'false');$('tab-'+x.dataset.tab).hidden=!on;});
+  });});
+
+  // ---------- exam countdown ----------
+  var exams=load('st_exams',[]);
+  function daysLeft(ds){
+    var p=ds.split('-'),t=new Date(+p[0],+p[1]-1,+p[2]),n=new Date();
+    n=new Date(n.getFullYear(),n.getMonth(),n.getDate());
+    return Math.round((t-n)/86400000);
+  }
+  function renderExams(){
+    var box=$('e-list');box.innerHTML='';
+    exams.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0;}).forEach(function(x){
+      var d=daysLeft(x.date),row=document.createElement('div');row.className='item';
+      var l=document.createElement('div');l.textContent=x.name+' — '+x.date;
+      var r=document.createElement('div');r.style.display='flex';r.style.gap='8px';r.style.alignItems='center';
+      var dd=document.createElement('span');dd.className='d';
+      dd.textContent=d>1?d+' days left':d===1?'Tomorrow':d===0?'Today!':'Done';
+      if(d<0)dd.style.color='var(--muted)';else if(d<=7)dd.style.color='var(--bad)';
+      var del=document.createElement('button');del.className='go alt sm';del.textContent='Delete';
+      del.addEventListener('click',function(){exams=exams.filter(function(e){return e!==x;});store('st_exams',exams);renderExams();});
+      r.appendChild(dd);r.appendChild(del);row.appendChild(l);row.appendChild(r);box.appendChild(row);
+    });
+  }
+  $('e-add').addEventListener('click',function(){
+    var n=$('e-name').value.trim(),d=$('e-date').value;
+    if(!n||!d)return;
+    exams.push({name:n,date:d});store('st_exams',exams);$('e-name').value='';$('e-date').value='';renderExams();
+  });
+  window.__daysLeft=daysLeft;
+  renderExams();
+
+  // ---------- flashcards ----------
+  var cards=load('st_cards',[]),ci=0,flip=false,known=0;
+  $('f-bulk').value=cards.map(function(c){return c[0]+' | '+c[1];}).join('\n');
+  function parseCards(t){
+    var out=[];
+    t.split('\n').forEach(function(line){
+      var i=line.indexOf('|');if(i<1)return;
+      var q=line.slice(0,i).trim(),a=line.slice(i+1).trim();
+      if(q&&a)out.push([q,a]);
+    });
+    return out;
+  }
+  window.__parseCards=parseCards;
+  function showCard(){
+    if(!cards.length){$('f-card').textContent='No cards yet. Add some above.';$('f-count').textContent='';return;}
+    if(ci>=cards.length)ci=0;
+    $('f-card').textContent=flip?cards[ci][1]:cards[ci][0];
+    $('f-count').textContent='Card '+(ci+1)+' of '+cards.length+' · Known this round: '+known+(flip?' (answer)':' (tap to flip)');
+  }
+  $('f-save').addEventListener('click',function(){cards=parseCards($('f-bulk').value);store('st_cards',cards);ci=0;flip=false;known=0;showCard();});
+  $('f-clear').addEventListener('click',function(){
+    if(!cards.length||!confirm('Delete all flashcards?'))return;
+    cards=[];store('st_cards',cards);$('f-bulk').value='';ci=0;flip=false;known=0;showCard();
+  });
+  $('f-card').addEventListener('click',function(){if(cards.length){flip=!flip;showCard();}});
+  $('f-card').addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&cards.length){e.preventDefault();flip=!flip;showCard();}});
+  $('f-next').addEventListener('click',function(){if(cards.length){ci=(ci+1)%cards.length;flip=false;showCard();}});
+  $('f-prev').addEventListener('click',function(){if(cards.length){ci=(ci-1+cards.length)%cards.length;flip=false;showCard();}});
+  $('f-know').addEventListener('click',function(){if(cards.length){known++;ci=(ci+1)%cards.length;flip=false;showCard();}});
+  $('f-shuf').addEventListener('click',function(){
+    for(var i=cards.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=cards[i];cards[i]=cards[j];cards[j]=t;}
+    ci=0;flip=false;known=0;showCard();
+  });
+  showCard();
+
+  // ---------- typing test ----------
+  var texts=[
+    'Practice makes a student perfect. Read a little every day, revise what you learned, and test yourself often.',
+    'A good pharmacist checks the label, the dose and the patient before handing over any medicine to anyone.',
+    'Time is valuable, so plan your study hours, take short breaks, and keep your notes neat and clear.',
+    'The library is quiet in the morning, which makes it the best place to finish difficult chapters.'
+  ],target='',started=0,finished=false;
+  function renderTyping(){
+    var v=$('y-in').value,box=$('y-target');box.innerHTML='';
+    for(var i=0;i<target.length;i++){
+      var s=document.createElement('span'),c=target[i];
+      if(i<v.length)s.className=v[i]===c?'ok':'no';
+      else if(i===v.length)s.className='cur';
+      s.textContent=c;box.appendChild(s);
+    }
+  }
+  function newTyping(){
+    target=texts[Math.floor(Math.random()*texts.length)];
+    $('y-in').value='';$('y-in').disabled=false;started=0;finished=false;
+    $('y-res').textContent='Speed: – WPM · Accuracy: –';renderTyping();
+  }
+  $('y-in').addEventListener('input',function(){
+    if(finished)return;
+    var v=this.value;
+    if(!started&&v.length)started=Date.now();
+    renderTyping();
+    if(v.length>=target.length){
+      finished=true;this.disabled=true;
+      var mins=Math.max((Date.now()-started)/60000,1/600),right=0;
+      for(var i=0;i<target.length;i++)if(v[i]===target[i])right++;
+      $('y-res').textContent='Speed: '+Math.round(right/5/mins)+' WPM · Accuracy: '+Math.round(right/target.length*100)+'%';
+    }
+  });
+  $('y-new').addEventListener('click',newTyping);
+  newTyping();
+
+  // ---------- SGPA ----------
+  var gr=$('g-rows');
+  for(var i=1;i<=8;i++){
+    var d=document.createElement('div');d.className='row';d.style.marginTop='8px';
+    d.innerHTML='<input type="number" min="0" step="any" placeholder="Subject '+i+' credits" id="g-c'+i+'"><input type="number" min="0" max="10" step="any" placeholder="Grade points (0-10)" id="g-p'+i+'">';
+    gr.appendChild(d);
+  }
+  $('g-go').addEventListener('click',function(){
+    var tc=0,tp=0,n=0;
+    for(var i=1;i<=8;i++){
+      var c=num('g-c'+i),p=num('g-p'+i);
+      if(c!==null&&p!==null&&c>0){tc+=c;tp+=c*p;n++;}
+    }
+    $('g-res').textContent=n?'SGPA: '+fmt(tp/tc)+'  (total credits '+fmt(tc)+', '+n+' subject'+(n>1?'s':'')+')':'Fill credits and grade points for at least one subject.';
+  });
+
+  // ---------- money ----------
+  $('m-emi').addEventListener('click',function(){
+    var P=num('m-p'),R=num('m-r'),N=num('m-n'),o=$('m-emi-res');
+    if(!(P>0)||R===null||R<0||!(N>=1)){o.textContent='Please fill loan amount, interest and months.';return;}
+    var r=R/12/100,emi=r===0?P/N:P*r*Math.pow(1+r,N)/(Math.pow(1+r,N)-1);
+    o.textContent='Monthly EMI: '+fmt(emi)+'\nTotal payment: '+fmt(emi*N)+'\nTotal interest: '+fmt(emi*N-P);
+  });
+  $('t-go').addEventListener('click',function(){
+    var a=num('t-a'),r=num('t-r'),o=$('t-res');
+    if(!(a>0)||r===null||r<0){o.textContent='Please fill amount and GST %.';return;}
+    if($('t-m').value==='add'){var g=a*r/100;o.textContent='GST: '+fmt(g)+'\nTotal with GST: '+fmt(a+g);}
+    else{var b=a/(1+r/100);o.textContent='Price without GST: '+fmt(b)+'\nGST included: '+fmt(a-b);}
+  });
+  $('x-go').addEventListener('click',function(){
+    var p=num('x-p'),d=num('x-d'),o=$('x-res');
+    if(!(p>0)||d===null||d<0||d>100){o.textContent='Please fill price and a discount between 0 and 100.';return;}
+    o.textContent='You save: '+fmt(p*d/100)+'\nYou pay: '+fmt(p-p*d/100);
+  });
+
+  // ---------- BMI ----------
+  $('b-go').addEventListener('click',function(){
+    var w=num('b-w'),h=num('b-h'),o=$('b-res');
+    if(!(w>0)||!(h>0)){o.textContent='Please fill weight and height.';return;}
+    var m=h/100,b=w/(m*m),c=b<18.5?'Underweight':b<25?'Normal range':b<30?'Overweight':'Obese range';
+    o.textContent='BMI: '+fmt(b,1)+' — '+c+' (WHO adult categories)';
+  });
+})();
+</script>
+</body>
+</html>
