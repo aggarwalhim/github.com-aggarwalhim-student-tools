@@ -54,6 +54,7 @@
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-tab="exam">Exam Countdown</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="cards">Flashcards</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="n2c">Notes → Flashcards</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="type">Typing Test</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="sgpa">SGPA</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="money">EMI / GST / Discount</button>
@@ -94,6 +95,29 @@
       <button class="go alt" id="f-know">I knew it ✓</button>
     </div>
     <div class="sub" id="f-count" style="margin-top:8px"></div>
+  </section>
+
+  <!-- Notes to flashcards -->
+  <section class="card" id="tab-n2c" hidden>
+    <h2>Notes → Flashcards</h2>
+    <p class="sub">Paste your notes and get flashcards instantly. It understands these styles:</p>
+    <pre style="background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto;font-size:.88rem;margin:8px 0 0">Mitochondria: powerhouse of the cell
+Aspirin - NSAID, also antiplatelet
+What is osmosis? Movement of water across a membrane
+Define half-life?
+Time taken for concentration to fall by half</pre>
+    <label for="n-in">Your notes</label>
+    <textarea id="n-in" style="min-height:160px"></textarea>
+    <label style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="n-cloze" style="width:auto"> Also make fill-in-the-blank cards from other sentences</label>
+    <button class="go" id="n-go">Make flashcards</button>
+    <button class="go alt" id="n-ai">Make with AI (for messy notes)</button>
+    <div class="res" id="n-msg"></div>
+    <label for="n-out">Your cards (you can edit them: one per line, <b>question | answer</b>)</label>
+    <textarea id="n-out" style="min-height:160px"></textarea>
+    <div class="row">
+      <button class="go" id="n-use">Use as my flashcards (replace)</button>
+      <button class="go alt" id="n-addc">Add to my flashcards</button>
+    </div>
   </section>
 
   <!-- Typing test -->
@@ -163,6 +187,7 @@
 
 <footer><p>Everything runs in your browser. Nothing is sent to a server.</p></footer>
 
+<script src="https://js.puter.com/v2/"></script>
 <script>
 (function(){
   var $=function(id){return document.getElementById(id);};
@@ -239,6 +264,71 @@
     ci=0;flip=false;known=0;showCard();
   });
   showCard();
+
+  // ---------- notes to flashcards ----------
+  function clean(t){return t.replace(/\|/g,'/').replace(/\s+/g,' ').trim();}
+  function parseNotes(text,cloze){
+    var raw=text.split('\n').map(function(l){return l.replace(/^\s*(?:[-*•▪●◦]+|\d+[.)])\s+/,'').trim();}).filter(Boolean);
+    var cards=[],skipped=0,i=0;
+    while(i<raw.length){
+      var line=raw[i],m,q=line.indexOf('?');
+      if(q>0&&q<line.length-1&&line.slice(q+1).trim().length>1){            // "Question? answer"
+        cards.push([clean(line.slice(0,q+1)),clean(line.slice(q+1))]);i++;continue;
+      }
+      if(q>0&&q===line.length-1){                                            // "Question?"  + next line is the answer
+        var nx=raw[i+1];
+        if(nx&&nx.indexOf('?')<0){cards.push([clean(line),clean(nx)]);i+=2;continue;}
+        skipped++;i++;continue;
+      }
+      m=line.match(/^(.{2,80}?)\s*\|\s*(.+)$/)||line.match(/^([^:]{2,80}?)\s*:\s+(.{2,})$/)||line.match(/^(.{2,60}?)\s+[-–—=]\s+(.{2,})$/);
+      if(m&&!/^\d+([.:,]\d+)*$/.test(m[1].trim())&&m[1].trim().split(/\s+/).length<=10){
+        cards.push([clean(m[1]),clean(m[2])]);i++;continue;
+      }
+      if(cloze&&line.split(/\s+/).length>=6){
+        var words=line.match(/[A-Za-z][A-Za-z-]{4,}/g);
+        if(words){
+          var w=words.reduce(function(a,b){return b.length>a.length?b:a;});
+          cards.push([clean(line.replace(w,'_____')),clean(w)]);i++;continue;
+        }
+      }
+      skipped++;i++;
+    }
+    return {cards:cards,skipped:skipped,lines:raw.length};
+  }
+  window.__parseNotes=parseNotes;
+  function showResult(r){
+    $('n-out').value=r.cards.map(function(c){return c[0]+' | '+c[1];}).join('\n');
+    $('n-msg').textContent=r.cards.length?('Made '+r.cards.length+' card(s) from '+r.lines+' line(s)'+(r.skipped?' ('+r.skipped+' line(s) did not look like a card — try "Term: meaning" or use the AI button)':'')+'. Check them below, then press a button to use them.'):'No cards found. Write notes like "Term: meaning" or "Question? answer", or tick the fill-in-the-blank box.';
+  }
+  $('n-go').addEventListener('click',function(){
+    if(!$('n-in').value.trim()){$('n-msg').textContent='Please paste some notes first.';return;}
+    showResult(parseNotes($('n-in').value,$('n-cloze').checked));
+  });
+  $('n-ai').addEventListener('click',async function(){
+    var t=$('n-in').value.trim(),btn=this;
+    if(!t){$('n-msg').textContent='Please paste some notes first.';return;}
+    if(typeof puter==='undefined'||!puter.ai){$('n-msg').textContent='AI service could not load. Check your internet, or use the "Make flashcards" button.';return;}
+    if(t.length>6000)t=t.slice(0,6000);
+    btn.disabled=true;$('n-msg').textContent='AI is reading your notes... (a free Puter sign-in window may open the first time)';
+    try{
+      var r=await puter.ai.chat('Turn these study notes into flashcards. Output ONLY lines in the exact format: question | answer . One card per line, no numbering, no extra text. Keep answers short. Do not use the | character inside a question or answer.\n\nNOTES:\n'+t);
+      var txt=typeof r==='string'?r:(r&&r.message?(Array.isArray(r.message.content)?r.message.content.map(function(x){return x&&x.text?x.text:'';}).join(''):r.message.content):'');
+      var cards=parseCards(String(txt||''));
+      showResult({cards:cards,skipped:0,lines:cards.length});
+      if(cards.length)$('n-msg').textContent='AI made '+cards.length+' card(s). AI can make mistakes — check them below before using.';
+    }catch(e){$('n-msg').textContent='Could not get cards from AI. Try the "Make flashcards" button instead.';}
+    btn.disabled=false;
+  });
+  function useCards(replace){
+    var add=parseCards($('n-out').value);
+    if(!add.length){$('n-msg').textContent='There are no cards to use yet.';return;}
+    cards=replace?add:cards.concat(add);
+    store('st_cards',cards);$('f-bulk').value=cards.map(function(c){return c[0]+' | '+c[1];}).join('\n');
+    ci=0;flip=false;known=0;showCard();
+    document.querySelector('[data-tab=cards]').click();
+  }
+  $('n-use').addEventListener('click',function(){useCards(true);});
+  $('n-addc').addEventListener('click',function(){useCards(false);});
 
   // ---------- typing test ----------
   var texts=[
