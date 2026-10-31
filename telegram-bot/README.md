@@ -59,8 +59,7 @@ This uses a "webhook": Telegram sends each message to your small web app. These 
    if path not in sys.path:
        sys.path.insert(0, path)
 
-   os.environ['BOT_TOKEN'] = 'HTTP API:
-9064162198:AAEwvFpPwondJWb-2Yi3FvbnFlQ9erbSUTk'
+   os.environ['BOT_TOKEN'] = 'PASTE-YOUR-TOKEN-HERE'
    os.environ['WEBHOOK_SECRET'] = 'any-long-random-text-you-invent'
 
    from bot import app as application
@@ -70,8 +69,7 @@ This uses a "webhook": Telegram sends each message to your small web app. These 
 6. Back in the Bash console, tell Telegram where your bot lives:
    ```bash
    cd ~/github.com-aggarwalhim-student-tools/telegram-bot
-   BOT_TOKEN="HTTP API:
-9064162198:AAEwvFpPwondJWb-2Yi3FvbnFlQ9erbSUTk" \
+   BOT_TOKEN="PASTE-YOUR-TOKEN-HERE" \
    WEBHOOK_SECRET="the-same-random-text" \
    WEBHOOK_URL="https://YOURUSERNAME.pythonanywhere.com/webhook" \
    python set_webhook.py
