@@ -12,7 +12,7 @@
   body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
   header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
   nav{padding-top:14px;font-size:.92rem}
-  nav a{margin-right:12px}
+  nav a{margin-right:12px;display:inline-block}
   header{padding-top:14px;padding-bottom:8px}
   h1{margin:0 0 4px;font-size:1.6rem}
   .sub{color:var(--muted);margin:0}
@@ -50,7 +50,7 @@
 </style>
 </head>
 <body>
-<nav><a href="index.html">Student Tools</a><a href="study.html">Study</a><a href="pharmacy.html">Pharmacy</a><a href="files.html"><strong>File &amp; Image Tools</strong></a><a href="ppt.html">PPT Tools</a></nav>
+<nav><a href="index.html">Student Tools</a><a href="study.html">Study</a><a href="pharmacy.html">Pharmacy</a><a href="files.html"><strong>Files</strong></a><a href="pdf.html">PDF</a><a href="extract.html">Extract</a><a href="career.html">Career</a><a href="writing.html">Writing</a><a href="ppt.html">PPT</a></nav>
 <header>
   <h1>File &amp; Image Tools</h1>
   <p class="sub">Crop, rotate, clean up and convert. Everything runs in your browser — files are never uploaded.</p>
@@ -65,6 +65,7 @@
     <button class="tab" role="tab" aria-selected="false" data-tab="pass">Passport Photo</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="i2p">Images to PDF</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="merge">Merge PDFs</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="kb">Exact KB Size</button>
   </div>
 
   <!-- AD SLOT 1 -->
@@ -187,6 +188,24 @@
     <input id="mg-files" type="file" accept="application/pdf" multiple>
     <button class="go" id="mg-go">Merge</button>
     <div class="res" id="mg-msg"></div>
+  </section>
+
+  <!-- Exact KB size -->
+  <section class="card" id="tab-kb" hidden>
+    <h2>Photo / Signature to Exact KB Size</h2>
+    <p class="sub">For exam and job forms that say “photo 20–50 KB”. Choose your picture and the maximum size; it shrinks the picture to fit as close to the limit as possible and saves it as JPG.</p>
+    <label for="k-file">Choose a photo or signature image</label>
+    <input id="k-file" type="file" accept="image/*">
+    <div class="row">
+      <div><label for="k-max">Maximum size (KB)</label><input id="k-max" type="number" min="5" step="1" value="50"></div>
+      <div><label for="k-min">Minimum size (KB, optional)</label><input id="k-min" type="number" min="0" step="1" placeholder="e.g. 20"></div>
+    </div>
+    <div class="row">
+      <div><label for="k-w">Width in pixels (optional)</label><input id="k-w" type="number" min="20" step="1" placeholder="e.g. 200"></div>
+      <div><label for="k-h">Height in pixels (optional)</label><input id="k-h" type="number" min="20" step="1" placeholder="e.g. 230"></div>
+    </div>
+    <button class="go" id="k-go">Make it fit &amp; download</button>
+    <div class="res" id="k-msg">Leave width and height empty to keep the picture's shape. If you fill them, the picture is resized to exactly that size.</div>
   </section>
 
   <!-- AD SLOT 2 -->
@@ -507,6 +526,60 @@
       downloadBlob(new Blob([await out.save()],{type:'application/pdf'}),'merged.pdf');
       setMsg('mg-msg','Done: '+files.length+' PDFs merged and downloaded.');
     }catch(e){setMsg('mg-msg','Could not merge (a PDF may be locked or damaged).',true);}
+    btn.disabled=false;
+  });
+  // ================= EXACT KB SIZE =================
+  function jpegBlob(cv,q){return new Promise(function(r){cv.toBlob(r,'image/jpeg',q);});}
+  function drawJpegCanvas(im,w,h){var c=newCanvas(Math.max(1,Math.round(w)),Math.max(1,Math.round(h))),x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.imageSmoothingQuality='high';x.drawImage(im,0,0,c.width,c.height);return c;}
+  // find the highest JPEG quality whose file is <= maxBytes; returns {blob,q} or null
+  async function bestQuality(cv,maxBytes){
+    var lo=0.05,hi=0.98,best=null,b=await jpegBlob(cv,lo);
+    if(b.size>maxBytes)return null;
+    best={blob:b,q:lo};
+    for(var i=0;i<9;i++){
+      var mid=(lo+hi)/2,bb=await jpegBlob(cv,mid);
+      if(bb.size<=maxBytes){best={blob:bb,q:mid};lo=mid;}else hi=mid;
+    }
+    return best;
+  }
+  async function fitToKb(im,maxKb,minKb,fw,fh){
+    var maxB=maxKb*1024,minB=(minKb||0)*1024,w=fw||im.naturalWidth,h=fh||im.naturalHeight,fixed=!!(fw&&fh);
+    var best=null;
+    for(var tries=0;tries<14;tries++){
+      var r=await bestQuality(drawJpegCanvas(im,w,h),maxB);
+      if(r){best={blob:r.blob,w:Math.round(w),h:Math.round(h)};break;}
+      if(fixed)break;                       // keep the exact pixel size the user asked for
+      w*=0.85;h*=0.85;
+    }
+    if(!best)return {error:fixed?'Cannot reach '+maxKb+' KB at '+fw+' × '+fh+' px. Try a bigger KB limit or smaller width/height.':'Could not reach '+maxKb+' KB. Try a bigger limit.'};
+    if(minB&&best.blob.size<minB&&!fixed){
+      var s=1.2,w2=best.w,h2=best.h;
+      for(var k=0;k<8&&best.blob.size<minB;k++){
+        w2*=s;h2*=s;var r2=await bestQuality(drawJpegCanvas(im,w2,h2),maxB);
+        if(!r2||r2.blob.size<best.blob.size)break;
+        best={blob:r2.blob,w:Math.round(w2),h:Math.round(h2)};
+      }
+    }
+    return best;
+  }
+  window.__fitToKb=fitToKb;
+  $('k-go').addEventListener('click',async function(){
+    var f=$('k-file').files[0],btn=this;
+    if(!f){setMsg('k-msg','Please choose an image first.',true);return;}
+    var maxKb=parseFloat($('k-max').value),minKb=parseFloat($('k-min').value)||0,fw=parseInt($('k-w').value,10)||0,fh=parseInt($('k-h').value,10)||0;
+    if(!(maxKb>=5)){setMsg('k-msg','Please enter a maximum size of at least 5 KB.',true);return;}
+    if(minKb>maxKb){setMsg('k-msg','The minimum cannot be bigger than the maximum.',true);return;}
+    if((fw&&!fh)||(!fw&&fh)){setMsg('k-msg','Fill both width and height, or leave both empty.',true);return;}
+    btn.disabled=true;setMsg('k-msg','Working...');
+    try{
+      var im=await loadImage(f),r=await fitToKb(im,maxKb,minKb,fw,fh);
+      if(r.error){setMsg('k-msg',r.error,true);}
+      else{
+        downloadBlob(r.blob,baseName(f.name)+'-'+Math.round(r.blob.size/1024)+'KB.jpg');
+        var kb=r.blob.size/1024;
+        setMsg('k-msg','Done: '+kb.toFixed(1)+' KB, '+r.w+' × '+r.h+' px (original '+(f.size/1024).toFixed(0)+' KB).'+(minKb&&kb<minKb?' It is smaller than your minimum — try a bigger picture.':''));
+      }
+    }catch(e){setMsg('k-msg',e.message||'Something went wrong.',true);}
     btn.disabled=false;
   });
 })();

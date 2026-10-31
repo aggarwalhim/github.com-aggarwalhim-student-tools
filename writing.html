@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Citation Finder, Similarity Check and Link Maker for Students</title>
+<meta name="description" content="Free citation finder (APA, MLA, Vancouver), citation maker, text similarity checker and WhatsApp/Telegram/email link maker. Runs in your browser.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#2b8a3e;--accent-d:#1f6a2f;--line:#e1e5ee;--warn:#fff4e0;--warn-t:#7a4a00;--good:#1a8f4d;--bad:#d33;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#69db7c;--accent-d:#97e8a6;--line:#2b3240;--warn:#3a2d12;--warn-t:#ffd58a;--good:#4cd48a;--bad:#ff7a7a;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
+  nav{padding-top:14px;font-size:.92rem}
+  nav a{margin-right:12px;display:inline-block}
+  header{padding-top:14px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  h3{margin:18px 0 4px;font-size:1rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:12px 0 6px;font-weight:600;font-size:.92rem}
+  label.inl{display:flex;gap:8px;align-items:center;font-weight:400}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  input[type=checkbox]{width:auto}
+  input[type=range]{padding:0}
+  textarea{min-height:120px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  button.go:disabled{opacity:.6;cursor:wait}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px;white-space:pre-wrap}
+  .warn{margin:12px 0;padding:10px 12px;border-radius:8px;background:var(--warn);color:var(--warn-t);font-size:.92rem}
+  .item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;word-break:break-word}
+  .item .t{font-weight:600}
+  code{background:var(--bg);padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+  a{color:var(--accent)}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  [hidden]{display:none!important}
+  #print-area{display:none}
+  @media print{
+    @page{margin:14mm}
+    body.printing>*:not(#print-area){display:none!important}
+    body.printing #print-area{display:block!important;color:#000;background:#fff;font:11pt/1.45 system-ui,Arial,sans-serif}
+    body.printing{background:#fff}
+  }
+</style>
+</head>
+<body>
+<nav><a href="index.html">Student Tools</a><a href="study.html">Study</a><a href="pharmacy.html">Pharmacy</a><a href="files.html">Files</a><a href="pdf.html">PDF</a><a href="extract.html">Extract</a><a href="career.html">Career</a><a href="writing.html"><strong>Writing</strong></a><a href="ppt.html">PPT</a></nav>
+<header>
+  <h1>Writing Tools</h1>
+  <p class="sub">Find and format citations, compare two texts for similarity, and make chat or email links.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="cite">Citation Finder</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="man">Citation Maker</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="sim">Similarity Check</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="lnk">Link Maker</button>
+  </div>
+
+  <!-- AD SLOT 1: paste your ad code here after your ad account is approved -->
+  <div class="ad">Ad space</div>
+
+  <section class="card" id="tab-cite">
+    <h2>Citation Finder</h2>
+    <p class="sub">Type a paper title or a DOI. It searches Crossref (a free scholarly database) and builds the citation. Needs internet.</p>
+    <label for="c-q">Title / DOI</label>
+    <input id="c-q" type="text" placeholder="e.g. 10.1038/nature14539 or a paper title">
+    <label for="c-style">Citation style</label>
+    <select id="c-style"><option value="apa">APA 7</option><option value="mla">MLA 9</option><option value="van">Vancouver (medical / pharmacy)</option></select>
+    <button class="go" id="c-go">Find citation</button>
+    <div class="res" id="c-msg"></div>
+    <div id="c-out"></div>
+    <div class="warn">Always check the result against the paper. Capital letters, journal names and page numbers can differ from what your teacher wants.</div>
+  </section>
+
+  <section class="card" id="tab-man" hidden>
+    <h2>Citation Maker (website or book)</h2>
+    <label for="m-type">Source type</label>
+    <select id="m-type"><option value="web">Website / web page</option><option value="book">Book</option></select>
+    <label for="m-auth">Author(s) — write as you want it shown</label>
+    <input id="m-auth" type="text" placeholder="Sharma, R. &amp; Verma, S.  (or an organisation name)">
+    <div class="row">
+      <div><label for="m-year">Year</label><input id="m-year" type="text" placeholder="2024"></div>
+      <div><label for="m-pub">Publisher / website name</label><input id="m-pub" type="text" placeholder="e.g. WHO / Pearson"></div>
+    </div>
+    <label for="m-title">Title</label>
+    <input id="m-title" type="text">
+    <div class="row">
+      <div><label for="m-url">URL (for websites)</label><input id="m-url" type="text" placeholder="https://..."></div>
+      <div><label for="m-acc">Date you visited (for MLA)</label><input id="m-acc" type="date"></div>
+    </div>
+    <button class="go" id="m-go">Make citations</button>
+    <div id="m-out"></div>
+  </section>
+
+  <section class="card" id="tab-sim" hidden>
+    <h2>Similarity Check</h2>
+    <div class="warn">This compares <strong>two texts you give it</strong>. It cannot search the internet or books, so it is <strong>not a real plagiarism checker</strong>. Use it to see how much of your text matches a source you already have.</div>
+    <label for="s-a">Your text</label>
+    <textarea id="s-a" style="min-height:150px"></textarea>
+    <label for="s-b">Source text to compare with</label>
+    <textarea id="s-b" style="min-height:150px"></textarea>
+    <button class="go" id="s-go">Compare</button>
+    <div class="res" id="s-msg"></div>
+    <div id="s-out"></div>
+    <h3>Search your sentences online</h3>
+    <p class="sub">Each button opens a Google search for that exact sentence, so you can see if it is copied from somewhere.</p>
+    <button class="go alt" id="s-web">List my sentences for web search</button>
+    <div id="s-web-out"></div>
+  </section>
+
+  <section class="card" id="tab-lnk" hidden>
+    <h2>Link Maker</h2>
+    <p class="sub">Make a link that opens WhatsApp, Telegram, email, SMS or a phone call with your message ready. Share it anywhere.</p>
+    <label for="k-type">Link type</label>
+    <select id="k-type"><option value="wa">WhatsApp chat</option><option value="tg">Telegram (username)</option><option value="mail">Email</option><option value="sms">SMS</option><option value="tel">Phone call</option></select>
+    <div class="row" id="k-numrow">
+      <div><label for="k-cc">Country code</label><input id="k-cc" type="text" value="91"></div>
+      <div><label for="k-to" id="k-to-l">Phone number</label><input id="k-to" type="text" placeholder="98XXXXXXXX"></div>
+    </div>
+    <div id="k-torow" hidden><label for="k-to2" id="k-to2-l">Username / email</label><input id="k-to2" type="text"></div>
+    <div id="k-subrow" hidden><label for="k-sub">Subject</label><input id="k-sub" type="text"></div>
+    <div id="k-msgrow"><label for="k-msg">Message (optional)</label><textarea id="k-msg" style="min-height:80px"></textarea></div>
+    <button class="go" id="k-go">Make link</button>
+    <div class="res" id="k-out" style="min-height:0"></div>
+    <div class="row"><button class="go alt" id="k-copy" hidden>Copy link</button><button class="go" id="k-open" hidden>Open link</button></div>
+    <p class="sub" style="margin-top:8px">A link <em>shortener</em> (like bit.ly) needs a server, so it is not possible on a free static site.</p>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer><p>Privacy: everything runs in your browser. Your files and text are not sent to any server.</p></footer>
+<div id="print-area"></div>
+
+
+<script>
+(function(){
+
+  var $=function(id){return document.getElementById(id);};
+  function setMsg(id,t,err){var e=$(id);e.textContent=t;e.style.color=err?'#d33':'';}
+  function baseName(n){return n.replace(/\.[^.]+$/,'');}
+  function downloadBlob(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();}
+  function fmtSize(n){return n>=1048576?(n/1048576).toFixed(2)+' MB':Math.max(1,Math.round(n/1024))+' KB';}
+  function copyText(t,done){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){prompt('Copy this:',t);});}else{prompt('Copy this:',t);}}
+  function loadImage(file){return new Promise(function(res,rej){var u=URL.createObjectURL(file),im=new Image();im.onload=function(){URL.revokeObjectURL(u);res(im);};im.onerror=function(){URL.revokeObjectURL(u);rej(new Error('Could not read this image.'));};im.src=u;});}
+  function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function load(k,d){try{var s=localStorage.getItem(k);return s?JSON.parse(s):d;}catch(e){return d;}}
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.addEventListener('click',function(){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on?'true':'false');$('tab-'+x.dataset.tab).hidden=!on;});});});
+
+  function el(tag,text){var e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;}
+  function copyBtn(getText){
+    var b=el('button','Copy');b.className='go alt';
+    b.addEventListener('click',function(){copyText(getText(),function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},1500);});});
+    return b;
+  }
+
+  // ================= CITATIONS =================
+  // A citation is an array of [text, italic] parts.
+  function plain(parts){return parts.map(function(p){return p[0];}).join('');}
+  function initials(given){return (given||'').split(/[\s-]+/).filter(Boolean).map(function(g){return g[0].toUpperCase()+'.';}).join(' ');}
+  function authorsApa(a){
+    if(!a.length)return '';
+    var f=a.map(function(x){return x.family?(x.family+(x.given?', '+initials(x.given):'')):(x.name||'');});
+    if(f.length===1)return f[0];
+    if(f.length<=20)return f.slice(0,-1).join(', ')+', & '+f[f.length-1];
+    return f.slice(0,19).join(', ')+', ... '+f[f.length-1];
+  }
+  function authorsMla(a){
+    if(!a.length)return '';
+    function first(x){return x.family?(x.family+(x.given?', '+x.given:'')):(x.name||'');}
+    function rev(x){return x.family?((x.given?x.given+' ':'')+x.family):(x.name||'');}
+    if(a.length===1)return first(a[0]);
+    if(a.length===2)return first(a[0])+', and '+rev(a[1]);
+    return first(a[0])+', et al';
+  }
+  function authorsVan(a){
+    if(!a.length)return '';
+    var f=a.slice(0,6).map(function(x){return x.family?(x.family+(x.given?' '+initials(x.given).replace(/[. ]/g,''):'')):(x.name||'');});
+    return f.join(', ')+(a.length>6?', et al':'');
+  }
+  function citeFrom(it,style){
+    var au=it.author||[],title=(it.title&&it.title[0])||'',cont=(it['container-title']&&it['container-title'][0])||'';
+    var dp=(it.issued&&it.issued['date-parts']&&it.issued['date-parts'][0])||[],yr=dp[0]||'n.d.';
+    var vol=it.volume||'',iss=it.issue||'',pg=it.page||'',doi=it.DOI?'https://doi.org/'+it.DOI:'',pub=it.publisher||'';
+    var P=[];
+    function end(s){return /[.?!]$/.test(s)?s:s+'.';}
+    if(style==='apa'){
+      var a=authorsApa(au);
+      P.push([a?end(a)+' ':'',false],['('+yr+'). ',false],[end(title)+' ',false]);
+      if(cont){P.push([cont,true]);if(vol){P.push([', ',false],[vol,true]);}if(iss)P.push(['('+iss+')',false]);if(pg)P.push([', '+pg,false]);P.push(['. ',false]);}
+      else if(pub)P.push([end(pub)+' ',false]);
+      if(doi)P.push([doi,false]);
+    }else if(style==='mla'){
+      var m=authorsMla(au);
+      P.push([m?end(m)+' ':'',false],['"'+end(title)+'" ',false]);
+      var bits=[];if(vol)bits.push('vol. '+vol);if(iss)bits.push('no. '+iss);bits.push(String(yr));if(pg)bits.push('pp. '+pg);
+      if(cont){P.push([cont,true],[', '+bits.join(', ')+(doi?', ':'.'),false]);}
+      else{P.push([(pub?pub+', ':'')+yr+(doi?', ':'.'),false]);}
+      if(doi)P.push([doi+'.',false]);
+    }else{
+      var v=authorsVan(au);
+      P.push([v?end(v)+' ':'',false],[end(title)+' ',false]);
+      if(cont){P.push([cont+'. '+yr+(vol?';'+vol:'')+(iss?'('+iss+')':'')+(pg?':'+pg:'')+'.',false]);}
+      else P.push([(pub?pub+'; ':'')+yr+'.',false]);
+      if(it.DOI)P.push([' doi:'+it.DOI,false]);
+    }
+    return P;
+  }
+  window.__citeFrom=citeFrom;
+  function renderCite(parts){
+    var d=el('div');d.className='item';
+    var line=el('div');parts.forEach(function(p){if(p[1]){var i=el('i',p[0]);line.appendChild(i);}else line.appendChild(document.createTextNode(p[0]));});
+    d.appendChild(line);d.appendChild(copyBtn(function(){return plain(parts);}));return d;
+  }
+  $('c-go').addEventListener('click',async function(){
+    var q=$('c-q').value.trim(),btn=this,out=$('c-out');out.innerHTML='';
+    if(!q){setMsg('c-msg','Please type a title or DOI.',true);return;}
+    btn.disabled=true;setMsg('c-msg','Searching...');
+    try{
+      var doiM=q.match(/10\.\d{4,9}\/[^\s]+/),items;
+      if(doiM){
+        var r=await fetch('https://api.crossref.org/works/'+encodeURIComponent(doiM[0].replace(/[.,;]+$/,'')));
+        if(!r.ok)throw new Error('notfound');
+        items=[(await r.json()).message];
+      }else{
+        var r2=await fetch('https://api.crossref.org/works?rows=5&select=title,author,issued,container-title,volume,issue,page,DOI,publisher&query.bibliographic='+encodeURIComponent(q));
+        if(!r2.ok)throw new Error('search');
+        items=(await r2.json()).message.items||[];
+      }
+      items=items.filter(function(x){return x&&x.title&&x.title[0];});
+      if(!items.length){setMsg('c-msg','Nothing found. Try more words from the title, or use the DOI.',true);btn.disabled=false;return;}
+      setMsg('c-msg','Found '+items.length+' result(s). Pick the right paper:');
+      var st=$('c-style').value;
+      items.forEach(function(it){out.appendChild(renderCite(citeFrom(it,st)));});
+    }catch(e){setMsg('c-msg',e.message==='notfound'?'That DOI was not found.':'Could not search right now. Check your internet connection and try again.',true);}
+    btn.disabled=false;
+  });
+
+  function manualCites(v){
+    var apa=[],mla=[];
+    function end(s){return /[.?!]$/.test(s)?s:s+'.';}
+    var yr=v.year||'n.d.',au=v.auth?end(v.auth)+' ':'';
+    if(v.type==='web'){
+      apa=[[au,false],['('+yr+'). ',false],[v.title,true],[(v.title&&!/[.?!]$/.test(v.title)?'. ':' '),false],[v.pub?end(v.pub)+' ':'',false],[v.url||'',false]];
+      var d=v.acc?new Date(v.acc+'T00:00:00'):null,acc=d?(d.getDate()+' '+['Jan.','Feb.','Mar.','Apr.','May','June','July','Aug.','Sept.','Oct.','Nov.','Dec.'][d.getMonth()]+' '+d.getFullYear()):'';
+      mla=[[au,false],['"'+end(v.title)+'" ',false],[v.pub?v.pub+', ':'',true],[yr+(v.url?', ':'.'),false],[v.url?v.url.replace(/^https?:\/\//,'')+'.':'',false],[acc?' Accessed '+acc+'.':'',false]];
+    }else{
+      apa=[[au,false],['('+yr+'). ',false],[v.title,true],[(v.title&&!/[.?!]$/.test(v.title)?'. ':' '),false],[v.pub?end(v.pub):'',false]];
+      mla=[[au,false],[end(v.title)+' ',true],[(v.pub?v.pub+', ':'')+yr+'.',false]];
+    }
+    return {apa:apa,mla:mla};
+  }
+  window.__manualCites=manualCites;
+  $('m-go').addEventListener('click',function(){
+    var v={type:$('m-type').value,auth:$('m-auth').value.trim(),year:$('m-year').value.trim(),pub:$('m-pub').value.trim(),title:$('m-title').value.trim(),url:$('m-url').value.trim(),acc:$('m-acc').value},out=$('m-out');
+    out.innerHTML='';
+    if(!v.title){out.appendChild(el('div','Please type the title.')).className='res';return;}
+    var c=manualCites(v);
+    [['APA 7',c.apa],['MLA 9',c.mla]].forEach(function(x){var h=el('div',x[0]);h.className='sub';h.style.marginTop='10px';out.appendChild(h);out.appendChild(renderCite(x[1]));});
+  });
+
+  // ================= SIMILARITY =================
+  function words(t){return t.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(Boolean);}
+  function shingles(w,k){var s={};for(var i=0;i+k<=w.length;i++)s[w.slice(i,i+k).join(' ')]=1;return s;}
+  function sentences(t){return t.split(/(?<=[.!?।])\s+|\n+/).map(function(x){return x.trim();}).filter(Boolean);}
+  function similarity(a,b,k){
+    k=k||4;
+    var sb=shingles(words(b),k),res={total:0,hit:0,matched:[]};
+    sentences(a).forEach(function(s){
+      var w=words(s);if(w.length<k)return;
+      var sh=shingles(w,k),keys=Object.keys(sh),h=keys.filter(function(x){return sb[x];}).length;
+      res.total+=keys.length;res.hit+=h;
+      if(h/keys.length>=0.5)res.matched.push({s:s,pct:Math.round(h/keys.length*100)});
+    });
+    res.pct=res.total?Math.round(res.hit/res.total*100):0;
+    return res;
+  }
+  window.__similarity=similarity;
+  $('s-go').addEventListener('click',function(){
+    var a=$('s-a').value,b=$('s-b').value,out=$('s-out');out.innerHTML='';
+    if(!a.trim()||!b.trim()){setMsg('s-msg','Please fill both boxes.',true);return;}
+    var r=similarity(a,b,4);
+    if(!r.total){setMsg('s-msg','Your text is too short to compare (needs sentences of at least 4 words).',true);return;}
+    setMsg('s-msg','Similarity: '+r.pct+'% of the 4-word phrases in your text also appear in the source.\n'+(r.matched.length?r.matched.length+' sentence(s) look copied or very close:':'No sentences look copied.'));
+    r.matched.forEach(function(m){var d=el('div',m.s+'  ('+m.pct+'% match)');d.className='item';out.appendChild(d);});
+  });
+  $('s-web').addEventListener('click',function(){
+    var out=$('s-web-out');out.innerHTML='';
+    var list=sentences($('s-a').value).filter(function(s){return words(s).length>=8;}).slice(0,15);
+    if(!list.length){out.appendChild(el('div','Type your text above first (sentences of 8+ words).')).className='res';return;}
+    list.forEach(function(s){
+      var d=el('div');d.className='item';d.appendChild(el('div',s));
+      var a=el('a','Search this sentence on Google');a.href='https://www.google.com/search?q='+encodeURIComponent('"'+s.split(/\s+/).slice(0,14).join(' ')+'"');a.target='_blank';a.rel='noopener';
+      d.appendChild(a);out.appendChild(d);
+    });
+  });
+
+  // ================= LINK MAKER =================
+  function digits(s){return (s||'').replace(/\D/g,'');}
+  function makeLink(v){
+    var msg=encodeURIComponent(v.msg||'');
+    if(v.type==='wa'){var n=digits(v.cc)+digits(v.to).replace(/^0+/,'');if(digits(v.to).length<6)return null;return 'https://wa.me/'+n+(v.msg?'?text='+msg:'');}
+    if(v.type==='tg'){var u=(v.to2||'').trim().replace(/^@/,'').replace(/^https?:\/\/t\.me\//,'');if(!/^[A-Za-z0-9_]{4,}$/.test(u))return null;return 'https://t.me/'+u;}
+    if(v.type==='mail'){var e=(v.to2||'').trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return null;var q=[];if(v.sub)q.push('subject='+encodeURIComponent(v.sub));if(v.msg)q.push('body='+msg);return 'mailto:'+e+(q.length?'?'+q.join('&'):'');}
+    if(v.type==='sms'){if(digits(v.to).length<6)return null;return 'sms:+'+digits(v.cc)+digits(v.to).replace(/^0+/,'')+(v.msg?'?body='+msg:'');}
+    if(digits(v.to).length<6)return null;return 'tel:+'+digits(v.cc)+digits(v.to).replace(/^0+/,'');
+  }
+  window.__makeLink=makeLink;
+  function linkUi(){
+    var t=$('k-type').value,num=(t==='wa'||t==='sms'||t==='tel');
+    $('k-numrow').hidden=!num;$('k-torow').hidden=num;$('k-subrow').hidden=t!=='mail';$('k-msgrow').hidden=(t==='tg'||t==='tel');
+    $('k-to2-l').textContent=t==='tg'?'Telegram username (without @)':'Email address';
+    $('k-out').textContent='';$('k-copy').hidden=true;$('k-open').hidden=true;
+  }
+  $('k-type').addEventListener('change',linkUi);linkUi();
+  var lastLink='';
+  $('k-go').addEventListener('click',function(){
+    var l=makeLink({type:$('k-type').value,cc:$('k-cc').value,to:$('k-to').value,to2:$('k-to2').value,sub:$('k-sub').value,msg:$('k-msg').value});
+    if(!l){setMsg('k-out','Please fill the number / username / email correctly.',true);$('k-copy').hidden=true;$('k-open').hidden=true;return;}
+    lastLink=l;setMsg('k-out',l);$('k-copy').hidden=false;$('k-open').hidden=false;
+  });
+  $('k-copy').addEventListener('click',function(){var b=this;copyText(lastLink,function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy link';},1500);});});
+  $('k-open').addEventListener('click',function(){window.open(lastLink,'_blank','noopener');});
+
+})();
+</script>
+</body>
+</html>

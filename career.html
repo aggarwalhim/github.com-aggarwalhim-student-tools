@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Resume Maker, Letter Maker and Resume Checker for Students</title>
+<meta name="description" content="Free resume maker, cover letter, leave application and internship letter templates, and a simple resume checker. Works in your browser; nothing is uploaded.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#5f3dc4;--accent-d:#4a2fa0;--line:#e1e5ee;--warn:#fff4e0;--warn-t:#7a4a00;--good:#1a8f4d;--bad:#d33;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#b197fc;--accent-d:#cdbcff;--line:#2b3240;--warn:#3a2d12;--warn-t:#ffd58a;--good:#4cd48a;--bad:#ff7a7a;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
+  nav{padding-top:14px;font-size:.92rem}
+  nav a{margin-right:12px;display:inline-block}
+  header{padding-top:14px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  h3{margin:18px 0 4px;font-size:1rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:12px 0 6px;font-weight:600;font-size:.92rem}
+  label.inl{display:flex;gap:8px;align-items:center;font-weight:400}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  input[type=checkbox]{width:auto}
+  input[type=range]{padding:0}
+  textarea{min-height:120px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  button.go:disabled{opacity:.6;cursor:wait}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px;white-space:pre-wrap}
+  .warn{margin:12px 0;padding:10px 12px;border-radius:8px;background:var(--warn);color:var(--warn-t);font-size:.92rem}
+  .item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;word-break:break-word}
+  .item .t{font-weight:600}
+  code{background:var(--bg);padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+  a{color:var(--accent)}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  [hidden]{display:none!important}
+  #print-area{display:none}
+  @media print{
+    @page{margin:14mm}
+    body.printing>*:not(#print-area){display:none!important}
+    body.printing #print-area{display:block!important;color:#000;background:#fff;font:11pt/1.45 system-ui,Arial,sans-serif}
+    body.printing{background:#fff}
+  }
+</style>
+</head>
+<body>
+<nav><a href="index.html">Student Tools</a><a href="study.html">Study</a><a href="pharmacy.html">Pharmacy</a><a href="files.html">Files</a><a href="pdf.html">PDF</a><a href="extract.html">Extract</a><a href="career.html"><strong>Career</strong></a><a href="writing.html">Writing</a><a href="ppt.html">PPT</a></nav>
+<header>
+  <h1>Career Tools</h1>
+  <p class="sub">Make a resume, write common letters, and check your resume against a job description.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="res">Resume Maker</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="let">Letter Maker</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="chk">Resume Checker</button>
+  </div>
+
+  <!-- AD SLOT 1: paste your ad code here after your ad account is approved -->
+  <div class="ad">Ad space</div>
+
+  <section class="card" id="tab-res">
+    <h2>Resume Maker</h2>
+    <p class="sub">Fill the boxes, check the preview, then tap <b>Print / Save as PDF</b>. Your details are saved on this device only.</p>
+    <div class="row">
+      <div><label for="r-name">Full name</label><input id="r-name" type="text" placeholder="e.g. Rahul Sharma"></div>
+      <div><label for="r-title">Job title / objective</label><input id="r-title" type="text" placeholder="e.g. B.Pharm Student"></div>
+    </div>
+    <div class="row">
+      <div><label for="r-phone">Phone</label><input id="r-phone" type="text" placeholder="98XXXXXXXX"></div>
+      <div><label for="r-email">Email</label><input id="r-email" type="email" placeholder="name@example.com"></div>
+    </div>
+    <label for="r-city">City / address</label><input id="r-city" type="text" placeholder="Yamuna Nagar, Haryana">
+    <label for="r-sum">Short summary (2-3 lines)</label><textarea id="r-sum" placeholder="Motivated pharmacy student with ..." style="min-height:70px"></textarea>
+    <label for="r-edu">Education (one per line)</label><textarea id="r-edu" placeholder="B.Pharm, ABC College, 2023-2027 - 8.2 CGPA&#10;12th, XYZ School, 2023 - 85%" style="min-height:90px"></textarea>
+    <label for="r-skills">Skills (separate with commas)</label><textarea id="r-skills" placeholder="Dispensing, MS Excel, Communication, Lab safety" style="min-height:60px"></textarea>
+    <label for="r-exp">Experience / projects (start a line with - for a bullet)</label><textarea id="r-exp" placeholder="Intern, City Pharmacy, 2025&#10;- Helped with dispensing and stock records" style="min-height:110px"></textarea>
+    <label for="r-ach">Achievements / other (one per line)</label><textarea id="r-ach" placeholder="Winner, college quiz 2025" style="min-height:70px"></textarea>
+    <div class="row">
+      <div><label for="r-color">Colour</label><select id="r-color"><option value="#1f3a5f">Navy</option><option value="#111111">Black</option><option value="#0b6b4f">Green</option><option value="#8a1c3d">Maroon</option></select></div>
+      <div><label for="r-lang">Section titles</label><select id="r-lang"><option value="en">English</option></select></div>
+    </div>
+    <button class="go" id="r-prev">Show preview</button>
+    <div id="r-box" class="item" style="background:#fff;color:#000;padding:18px" hidden></div>
+    <button class="go" id="r-print" hidden>Print / Save as PDF</button>
+    <div class="res" id="r-msg">In the print window, choose “Save as PDF” as the printer.</div>
+  </section>
+
+  <section class="card" id="tab-let" hidden>
+    <h2>Letter Maker</h2>
+    <p class="sub">Choose a letter type, fill in the boxes and get a ready letter you can edit, copy, or save as PDF.</p>
+    <label for="l-type">Letter type</label>
+    <select id="l-type">
+      <option value="leave">Leave application (to Principal / HOD)</option>
+      <option value="cover">Job cover letter</option>
+      <option value="intern">Internship application</option>
+      <option value="cert">Request for a certificate (bonafide / character / other)</option>
+    </select>
+    <div class="row">
+      <div><label for="l-name">Your name</label><input id="l-name" type="text" placeholder="Rahul Sharma"></div>
+      <div><label for="l-class">Class / roll no. / course (optional)</label><input id="l-class" type="text" placeholder="B.Pharm 3rd year, Roll 21"></div>
+    </div>
+    <label for="l-addr">Your address (optional)</label><textarea id="l-addr" placeholder="Village/Street, City, PIN" style="min-height:50px"></textarea>
+    <div class="row">
+      <div><label for="l-to">Send to (designation)</label><input id="l-to" type="text" placeholder="The Principal"></div>
+      <div><label for="l-org">Institute / company name</label><input id="l-org" type="text" placeholder="ABC College of Pharmacy"></div>
+    </div>
+    <label for="l-place">Place of institute / company (optional)</label><input id="l-place" type="text" placeholder="Yamuna Nagar">
+    <div id="l-extra"></div>
+    <button class="go" id="l-go">Make letter</button>
+    <label for="l-out">Your letter (you can edit it)</label>
+    <textarea id="l-out" style="min-height:300px"></textarea>
+    <div class="row">
+      <button class="go alt" id="l-copy">Copy</button>
+      <button class="go" id="l-print">Print / Save as PDF</button>
+    </div>
+  </section>
+
+  <section class="card" id="tab-chk" hidden>
+    <h2>Resume Checker</h2>
+    <div class="warn">This is a simple <strong>keyword and basics</strong> check against a job description. It is not a real ATS score and cannot judge quality. Use it as a quick guide only.</div>
+    <label for="c-res">Paste your resume text</label>
+    <textarea id="c-res" style="min-height:160px"></textarea>
+    <label for="c-jd">Paste the job description (optional, for keyword match)</label>
+    <textarea id="c-jd" style="min-height:130px"></textarea>
+    <button class="go" id="c-go">Check resume</button>
+    <div class="res" id="c-out"></div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer><p>Privacy: everything runs in your browser. Your files and text are not sent to any server.</p></footer>
+<div id="print-area"></div>
+
+
+<script>
+(function(){
+
+  var $=function(id){return document.getElementById(id);};
+  function setMsg(id,t,err){var e=$(id);e.textContent=t;e.style.color=err?'#d33':'';}
+  function baseName(n){return n.replace(/\.[^.]+$/,'');}
+  function downloadBlob(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();}
+  function fmtSize(n){return n>=1048576?(n/1048576).toFixed(2)+' MB':Math.max(1,Math.round(n/1024))+' KB';}
+  function copyText(t,done){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){prompt('Copy this:',t);});}else{prompt('Copy this:',t);}}
+  function loadImage(file){return new Promise(function(res,rej){var u=URL.createObjectURL(file),im=new Image();im.onload=function(){URL.revokeObjectURL(u);res(im);};im.onerror=function(){URL.revokeObjectURL(u);rej(new Error('Could not read this image.'));};im.src=u;});}
+  function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function load(k,d){try{var s=localStorage.getItem(k);return s?JSON.parse(s):d;}catch(e){return d;}}
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.addEventListener('click',function(){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on?'true':'false');$('tab-'+x.dataset.tab).hidden=!on;});});});
+
+  var td=function(){var d=new Date();return d.getDate()+' '+['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()]+' '+d.getFullYear();};
+  function el(tag,text,css){var e=document.createElement(tag);if(text!==undefined&&text!==null)e.textContent=text;if(css)e.style.cssText=css;return e;}
+  function printNode(node){
+    var pa=$('print-area');pa.innerHTML='';pa.appendChild(node.cloneNode(true));
+    document.body.classList.add('printing');window.print();
+    setTimeout(function(){document.body.classList.remove('printing');},500);
+  }
+  window.addEventListener('afterprint',function(){document.body.classList.remove('printing');});
+
+  // ================= RESUME MAKER =================
+  var RF=['r-name','r-title','r-phone','r-email','r-city','r-sum','r-edu','r-skills','r-exp','r-ach','r-color'];
+  var saved=load('cr_resume',{});RF.forEach(function(id){if(saved[id]!==undefined)$(id).value=saved[id];});
+  function lines(t){return t.split('\n').map(function(l){return l.trim();}).filter(Boolean);}
+  function buildResume(v){
+    var col=v['r-color']||'#1f3a5f',root=el('div','','font-family:Arial,Helvetica,sans-serif;font-size:11pt;line-height:1.45;color:#000;');
+    root.appendChild(el('div',v['r-name']||'Your Name','font-size:22pt;font-weight:700;color:'+col+';'));
+    if(v['r-title'])root.appendChild(el('div',v['r-title'],'font-size:12pt;margin-top:2px;'));
+    var contact=[v['r-phone'],v['r-email'],v['r-city']].filter(Boolean).join('  |  ');
+    if(contact)root.appendChild(el('div',contact,'font-size:10pt;margin-top:4px;color:#333;'));
+    function section(title){
+      var h=el('div',title.toUpperCase(),'font-weight:700;font-size:11pt;color:'+col+';border-bottom:2px solid '+col+';margin:14px 0 6px;padding-bottom:2px;letter-spacing:.5px;');
+      root.appendChild(h);
+    }
+    if(v['r-sum']&&v['r-sum'].trim()){section('Summary');root.appendChild(el('div',v['r-sum'].trim()));}
+    var edu=lines(v['r-edu']||'');if(edu.length){section('Education');edu.forEach(function(l){root.appendChild(el('div',l,'margin-bottom:3px;'));});}
+    var sk=(v['r-skills']||'').split(',').map(function(s){return s.trim();}).filter(Boolean);if(sk.length){section('Skills');root.appendChild(el('div',sk.join('  •  ')));}
+    var ex=lines(v['r-exp']||'');
+    if(ex.length){section('Experience / Projects');ex.forEach(function(l){
+      if(/^[-•*]\s*/.test(l))root.appendChild(el('div','•  '+l.replace(/^[-•*]\s*/,''),'margin-left:14px;text-indent:-12px;padding-left:12px;'));
+      else root.appendChild(el('div',l,'font-weight:700;margin-top:6px;'));
+    });}
+    var ac=lines(v['r-ach']||'');if(ac.length){section('Achievements');ac.forEach(function(l){root.appendChild(el('div','•  '+l.replace(/^[-•*]\s*/,''),'margin-left:14px;text-indent:-12px;padding-left:12px;'));});}
+    return root;
+  }
+  window.__buildResume=buildResume;
+  function resumeValues(){var v={};RF.forEach(function(id){v[id]=$(id).value;});return v;}
+  RF.forEach(function(id){$(id).addEventListener('input',function(){store('cr_resume',resumeValues());});});
+  $('r-prev').addEventListener('click',function(){
+    var v=resumeValues();
+    if(!v['r-name'].trim()){setMsg('r-msg','Please type your name first.',true);return;}
+    var box=$('r-box');box.innerHTML='';box.appendChild(buildResume(v));box.hidden=false;$('r-print').hidden=false;
+    setMsg('r-msg','Check the preview. In the print window, choose “Save as PDF” as the printer.');
+  });
+  $('r-print').addEventListener('click',function(){printNode($('r-box'));});
+
+  // ================= LETTER MAKER =================
+  var EXTRA={
+    leave:[['x-from','Leave from (date)','date'],['x-till','Leave till (date)','date'],['x-reason','Reason for leave','text','e.g. fever / family function']],
+    cover:[['x-pos','Post you are applying for','text','e.g. Pharmacy Assistant'],['x-skills','Your key skills or qualification','text','e.g. B.Pharm, dispensing, MS Excel'],['x-why','Why you want this job (one line)','text','']],
+    intern:[['x-field','Field / department','text','e.g. Production / Quality Control'],['x-dur','Duration','text','e.g. 4 weeks in June 2027'],['x-why','Why you want this internship (one line)','text','']],
+    cert:[['x-cert','Certificate needed','text','e.g. Bonafide certificate'],['x-purpose','Purpose','text','e.g. scholarship application']]
+  };
+  function renderExtra(){
+    var box=$('l-extra');box.innerHTML='';
+    EXTRA[$('l-type').value].forEach(function(f){
+      var lab=el('label',f[1]);lab.htmlFor=f[0];var inp=document.createElement('input');inp.id=f[0];inp.type=f[2];if(f[3])inp.placeholder=f[3];
+      box.appendChild(lab);box.appendChild(inp);
+    });
+  }
+  $('l-type').addEventListener('change',renderExtra);renderExtra();
+  function dmy(s){if(!s)return '';var p=s.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;}
+  function days(a,b){if(!a||!b)return 0;return Math.round((new Date(b)-new Date(a))/86400000)+1;}
+  function makeLetter(type,v){
+    var name=v.name||'[Your name]',to=v.to||'The Principal',org=v.org||'[Institute / company]',L=[];
+    var from=['From,',name];if(v.cls)from.push(v.cls);if(v.addr)from.push(v.addr);
+    L=L.concat(from,['','Date: '+(v.date||td()),'','To,',to,org]);if(v.place)L.push(v.place);L.push('');
+    var subj,body;
+    if(type==='leave'){
+      var n=days(v.x['x-from'],v.x['x-till']);
+      subj='Application for leave';
+      body='I respectfully state that I am unable to attend '+(v.cls?'my classes ':'college ')+(v.x['x-from']?'from '+dmy(v.x['x-from'])+(v.x['x-till']?' to '+dmy(v.x['x-till'])+(n>0?' ('+n+' day'+(n>1?'s':'')+')':''):''):'')+(v.x['x-reason']?' due to '+v.x['x-reason']:'')+'.\n\nI kindly request you to grant me leave for the above period. I will complete the missed work after returning.';
+    }else if(type==='cover'){
+      subj='Application for the post of '+(v.x['x-pos']||'[post]');
+      body='I am writing to apply for the post of '+(v.x['x-pos']||'[post]')+' at '+org+'.'+(v.x['x-skills']?' I have '+v.x['x-skills']+', which I believe suits this role.':'')+(v.x['x-why']?' '+v.x['x-why'].replace(/\.?$/,'.'):'')+'\n\nI am hardworking, willing to learn, and committed to doing my duties responsibly. My resume is attached for your kind consideration. I would be grateful for an opportunity to meet you for an interview.';
+    }else if(type==='intern'){
+      subj='Application for internship'+(v.x['x-field']?' in '+v.x['x-field']:'');
+      body='I am a student'+(v.cls?' of '+v.cls:'')+' and I wish to do an internship'+(v.x['x-field']?' in the field of '+v.x['x-field']:'')+' at '+org+(v.x['x-dur']?' for '+v.x['x-dur']:'')+'.'+(v.x['x-why']?' '+v.x['x-why'].replace(/\.?$/,'.'):'')+'\n\nI am eager to learn and will follow all rules of your organisation. I request you to kindly give me this opportunity. I will be thankful to you.';
+    }else{
+      subj='Request for '+(v.x['x-cert']||'certificate');
+      body='I am a student'+(v.cls?' of '+v.cls:'')+' of your institution. I kindly request you to issue me a '+(v.x['x-cert']||'certificate')+(v.x['x-purpose']?' as I need it for '+v.x['x-purpose']:'')+'.\n\nI shall be very thankful to you for this kind help.';
+    }
+    L.push('Subject: '+subj,'',(type==='cover'||type==='intern')?'Respected Sir/Madam,':'Respected Sir/Madam,','',body,'','Thanking you.','','Yours faithfully,',name);
+    if(v.cls)L.push(v.cls);
+    return L.join('\n');
+  }
+  window.__makeLetter=makeLetter;
+  $('l-go').addEventListener('click',function(){
+    var x={};(EXTRA[$('l-type').value]).forEach(function(f){x[f[0]]=$(f[0]).value.trim();});
+    var v={name:$('l-name').value.trim(),cls:$('l-class').value.trim(),addr:$('l-addr').value.trim(),to:$('l-to').value.trim(),org:$('l-org').value.trim(),place:$('l-place').value.trim(),x:x};
+    $('l-out').value=makeLetter($('l-type').value,v);
+  });
+  $('l-copy').addEventListener('click',function(){var b=this;copyText($('l-out').value,function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},1500);});});
+  $('l-print').addEventListener('click',function(){
+    if(!$('l-out').value.trim())return;
+    var d=el('div',$('l-out').value,'white-space:pre-wrap;font-family:Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.6;');printNode(d);
+  });
+
+  // ================= RESUME CHECKER =================
+  var STOP='a an and are as at be been but by can do for from had has have he her his how i if in into is it its may more most must not of on or our out she so some such than that the their them then there these they this to up us use used using was we were what when which who will with would you your about also any all each other new per etc job role work works working team looking required requirements responsibilities ability candidate experience years year skills strong good well plus including preferred knowledge understanding need needs key must should great excellent ideal like looking'.split(' ');
+  var stopSet={};STOP.forEach(function(w){stopSet[w]=1;});
+  function keywords(t,n){
+    var freq={};(t.toLowerCase().match(/[a-z][a-z0-9+#.\-]{2,}/g)||[]).forEach(function(w){w=w.replace(/[.\-]+$/,'');if(w.length<3||stopSet[w])return;freq[w]=(freq[w]||0)+1;});
+    return Object.keys(freq).sort(function(a,b){return freq[b]-freq[a]||b.length-a.length;}).slice(0,n);
+  }
+  function checkResume(res,jd){
+    var r=res.toLowerCase(),words=(res.match(/\S+/g)||[]).length,out=[],ok=0,tot=0;
+    function chk(c,good,bad){tot++;if(c)ok++;out.push((c?'✓ ':'✗ ')+(c?good:bad));}
+    chk(/[\w.+-]+@[\w-]+\.[\w.]+/.test(res),'Email found','No email address found');
+    chk(/(?:\+?91[\s-]?)?[6-9]\d{9}/.test(res.replace(/[\s-]/g,'')),'Phone number found','No 10-digit phone number found');
+    chk(/education|qualification|b\.?\s?pharm|d\.?\s?pharm|m\.?\s?pharm|degree|school|college|university/.test(r),'Education section found','No education details found');
+    chk(/skills?|technical|competenc/.test(r),'Skills mentioned','No skills section found');
+    chk(/experience|intern|project|training|work/.test(r),'Experience / projects / training mentioned','No experience, projects or training mentioned');
+    chk(words>=150&&words<=900,'Length looks fine ('+words+' words)','Length: '+words+' words — usually 150 to 700 words works best for a student resume');
+    var res2={lines:out,basics:ok+'/'+tot,jd:null};
+    if(jd&&jd.trim()){
+      var kws=keywords(jd,25),have=kws.filter(function(k){return r.indexOf(k)>-1;}),miss=kws.filter(function(k){return r.indexOf(k)<0;});
+      res2.jd={pct:kws.length?Math.round(have.length/kws.length*100):0,have:have,miss:miss,n:kws.length};
+    }
+    return res2;
+  }
+  window.__checkResume=checkResume;
+  $('c-go').addEventListener('click',function(){
+    var res=$('c-res').value;if(!res.trim()){setMsg('c-out','Please paste your resume text first.',true);return;}
+    var r=checkResume(res,$('c-jd').value),t='Basics checked: '+r.basics+'\n'+r.lines.join('\n');
+    if(r.jd)t+='\n\nKeyword match with the job description: '+r.jd.pct+'% ('+r.jd.have.length+' of the '+r.jd.n+' main words found)\nFound: '+(r.jd.have.join(', ')||'none')+'\nMissing (add only if they are true for you): '+(r.jd.miss.join(', ')||'none');
+    setMsg('c-out',t);
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Extract Tools: Image to Text OCR, PDF to Text, Word to Text</title>
+<meta name="description" content="Free tools to extract text: image to text (OCR, English and Hindi), PDF to text, Word to text, and find links, emails and phone numbers. Runs in your browser.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#0b7285;--accent-d:#085866;--line:#e1e5ee;--warn:#fff4e0;--warn-t:#7a4a00;--good:#1a8f4d;--bad:#d33;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#4fd1e6;--accent-d:#7de0f0;--line:#2b3240;--warn:#3a2d12;--warn-t:#ffd58a;--good:#4cd48a;--bad:#ff7a7a;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
+  nav{padding-top:14px;font-size:.92rem}
+  nav a{margin-right:12px;display:inline-block}
+  header{padding-top:14px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  h3{margin:18px 0 4px;font-size:1rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:12px 0 6px;font-weight:600;font-size:.92rem}
+  label.inl{display:flex;gap:8px;align-items:center;font-weight:400}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  input[type=checkbox]{width:auto}
+  input[type=range]{padding:0}
+  textarea{min-height:120px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  button.go:disabled{opacity:.6;cursor:wait}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px;white-space:pre-wrap}
+  .warn{margin:12px 0;padding:10px 12px;border-radius:8px;background:var(--warn);color:var(--warn-t);font-size:.92rem}
+  .item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;word-break:break-word}
+  .item .t{font-weight:600}
+  code{background:var(--bg);padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+  a{color:var(--accent)}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  [hidden]{display:none!important}
+  #print-area{display:none}
+  @media print{
+    @page{margin:14mm}
+    body.printing>*:not(#print-area){display:none!important}
+    body.printing #print-area{display:block!important;color:#000;background:#fff;font:11pt/1.45 system-ui,Arial,sans-serif}
+    body.printing{background:#fff}
+  }
+</style>
+</head>
+<body>
+<nav><a href="index.html">Student Tools</a><a href="study.html">Study</a><a href="pharmacy.html">Pharmacy</a><a href="files.html">Files</a><a href="pdf.html">PDF</a><a href="extract.html"><strong>Extract</strong></a><a href="career.html">Career</a><a href="writing.html">Writing</a><a href="ppt.html">PPT</a></nav>
+<header>
+  <h1>Extract Tools</h1>
+  <p class="sub">Pull text out of images, PDFs and Word files, or find links and emails in any text.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="ocr">Image → Text (OCR)</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pdf">PDF → Text</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="doc">Word → Text</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="lnk">Links / Emails</button>
+  </div>
+
+  <!-- AD SLOT 1: paste your ad code here after your ad account is approved -->
+  <div class="ad">Ad space</div>
+
+  <section class="card" id="tab-ocr">
+    <h2>Image to Text (OCR)</h2>
+    <p class="sub">Read the text from a photo or scan. Works best on clear, straight, well-lit pictures.</p>
+    <label for="o-file">Choose an image</label>
+    <input id="o-file" type="file" accept="image/*">
+    <label for="o-lang">Language</label>
+    <select id="o-lang"><option value="eng">English</option><option value="hin">Hindi</option><option value="hin+eng">Hindi + English</option></select>
+    <button class="go" id="o-go">Read text</button>
+    <div class="res" id="o-msg">The first time, a language file (a few MB) is downloaded, so it can take a minute. Handwriting is not read well.</div>
+    <textarea id="o-out" hidden readonly></textarea>
+    <div class="row">
+      <button class="go alt" id="o-copy" hidden>Copy text</button>
+      <button class="go" id="o-dl" hidden>Download .txt</button>
+    </div>
+  </section>
+
+  <section class="card" id="tab-pdf" hidden>
+    <h2>PDF to Text</h2>
+    <p class="sub">Copy the text out of a PDF. Scanned PDFs (pictures of pages) have no text — use Image → Text (OCR) on a photo of the page instead.</p>
+    <label for="p-file">Choose a PDF</label>
+    <input id="p-file" type="file" accept="application/pdf">
+    <button class="go" id="p-go">Extract text</button>
+    <div class="res" id="p-msg"></div>
+    <textarea id="p-out" hidden readonly></textarea>
+    <div class="row">
+      <button class="go alt" id="p-copy" hidden>Copy text</button>
+      <button class="go" id="p-dl" hidden>Download .txt</button>
+    </div>
+  </section>
+
+  <section class="card" id="tab-doc" hidden>
+    <h2>Word (.docx) to Text</h2>
+    <p class="sub">Choose a <code>.docx</code> file and get its text. Old <code>.doc</code> files must first be saved as .docx in Word.</p>
+    <label for="d-file">Choose a Word file</label>
+    <input id="d-file" type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    <div class="res" id="d-msg"></div>
+    <textarea id="d-out" hidden readonly></textarea>
+    <div class="row">
+      <button class="go alt" id="d-copy" hidden>Copy text</button>
+      <button class="go" id="d-dl" hidden>Download .txt</button>
+    </div>
+  </section>
+
+  <section class="card" id="tab-lnk" hidden>
+    <h2>Extract Links, Emails &amp; Phone Numbers</h2>
+    <p class="sub">Paste any text and pull out all the web links, email addresses and 10-digit phone numbers.</p>
+    <label for="l-in">Paste text</label>
+    <textarea id="l-in"></textarea>
+    <button class="go" id="l-go">Extract</button>
+    <div class="res" id="l-msg"></div>
+    <div id="l-out"></div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer><p>Privacy: everything runs in your browser. Your files and text are not sent to any server.</p></footer>
+<div id="print-area"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script>
+(function(){
+
+  var $=function(id){return document.getElementById(id);};
+  function setMsg(id,t,err){var e=$(id);e.textContent=t;e.style.color=err?'#d33':'';}
+  function baseName(n){return n.replace(/\.[^.]+$/,'');}
+  function downloadBlob(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();}
+  function fmtSize(n){return n>=1048576?(n/1048576).toFixed(2)+' MB':Math.max(1,Math.round(n/1024))+' KB';}
+  function copyText(t,done){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){prompt('Copy this:',t);});}else{prompt('Copy this:',t);}}
+  function loadImage(file){return new Promise(function(res,rej){var u=URL.createObjectURL(file),im=new Image();im.onload=function(){URL.revokeObjectURL(u);res(im);};im.onerror=function(){URL.revokeObjectURL(u);rej(new Error('Could not read this image.'));};im.src=u;});}
+  function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function load(k,d){try{var s=localStorage.getItem(k);return s?JSON.parse(s):d;}catch(e){return d;}}
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.addEventListener('click',function(){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on?'true':'false');$('tab-'+x.dataset.tab).hidden=!on;});});});
+
+  var PDFJS_VER='6.2.108',pdfjsPromise=null;
+  function getPdfjs(){
+    if(!pdfjsPromise){
+      var base='https://cdn.jsdelivr.net/npm/pdfjs-dist@'+PDFJS_VER+'/legacy/build/';
+      pdfjsPromise=import(base+'pdf.min.mjs').then(function(m){m.GlobalWorkerOptions.workerSrc=base+'pdf.worker.min.mjs';return m;});
+      pdfjsPromise.catch(function(){pdfjsPromise=null;});
+    }
+    return pdfjsPromise;
+  }
+  window.__setPdfjsLoader=function(f){getPdfjs=f;};
+
+  function showOut(p,text){
+    $(p+'-out').value=text;['out','copy','dl'].forEach(function(k){$(p+'-'+k).hidden=false;});
+  }
+  function hideOut(p){['out','copy','dl'].forEach(function(k){$(p+'-'+k).hidden=true;});}
+  ['o','p','d'].forEach(function(p){
+    $(p+'-copy').addEventListener('click',function(){var b=this;copyText($(p+'-out').value,function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy text';},1500);});});
+    $(p+'-dl').addEventListener('click',function(){
+      var fid=p+'-file',f=$(fid).files[0];
+      downloadBlob(new Blob([$(p+'-out').value],{type:'text/plain'}),(f?baseName(f.name):'text')+'.txt');
+    });
+  });
+
+  // ---- OCR (Tesseract.js) ----
+  $('o-go').addEventListener('click',async function(){
+    var f=$('o-file').files[0],btn=this;hideOut('o');
+    if(!f){setMsg('o-msg','Please choose an image first.',true);return;}
+    if(typeof Tesseract==='undefined'){setMsg('o-msg','The OCR library could not load. Check your internet and reload.',true);return;}
+    btn.disabled=true;setMsg('o-msg','Starting... (first time can take a minute)');
+    var worker=null;
+    try{
+      worker=await Tesseract.createWorker($('o-lang').value,1,{logger:function(m){
+        if(m&&m.status){setMsg('o-msg',m.status+(typeof m.progress==='number'?' '+Math.round(m.progress*100)+'%':''));}
+      }});
+      var r=await worker.recognize(f),text=(r&&r.data&&r.data.text||'').trim();
+      if(!text){setMsg('o-msg','No text found. Try a clearer, straighter, brighter photo.',true);}
+      else{showOut('o',text);setMsg('o-msg','Done. Please check the text — OCR can make mistakes.');}
+    }catch(e){setMsg('o-msg','Could not read this image. Check your internet connection and try again.',true);}
+    try{if(worker)await worker.terminate();}catch(e){}
+    btn.disabled=false;
+  });
+
+  // ---- PDF text ----
+  $('p-go').addEventListener('click',async function(){
+    var f=$('p-file').files[0],btn=this;hideOut('p');
+    if(!f){setMsg('p-msg','Please choose a PDF first.',true);return;}
+    btn.disabled=true;setMsg('p-msg','Loading PDF reader...');
+    try{
+      var lib=await getPdfjs(),doc=await lib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise,n=doc.numPages,parts=[];
+      if(n>300)throw new Error('This PDF has '+n+' pages. The limit is 300.');
+      for(var i=1;i<=n;i++){
+        setMsg('p-msg','Reading page '+i+' of '+n+'...');
+        var tc=await (await doc.getPage(i)).getTextContent(),s='';
+        tc.items.forEach(function(it){if(typeof it.str==='string'){s+=it.str;s+=it.hasEOL?'\n':(it.str&&!/\s$/.test(it.str)?' ':'');}});
+        parts.push('--- Page '+i+' ---\n'+s.replace(/[ \t]+\n/g,'\n').trim());
+      }
+      var all=parts.join('\n\n');
+      if(!all.replace(/--- Page \d+ ---/g,'').trim()){setMsg('p-msg','No text found. This looks like a scanned PDF. Use Image → Text (OCR) on a photo of the page.',true);}
+      else{showOut('p',all);setMsg('p-msg','Done: '+n+' page(s) read.');}
+    }catch(e){
+      var m=e&&e.message||'';
+      setMsg('p-msg',/password/i.test(m)?'This PDF is password protected.':(m.indexOf('limit')>-1?m:'Could not read this PDF. Check your internet connection (the PDF reader loads online).'),true);
+    }
+    btn.disabled=false;
+  });
+
+  // ---- Word text ----
+  async function docxText(buf){
+    var zip=await JSZip.loadAsync(buf),entry=zip.files['word/document.xml'];
+    if(!entry)throw new Error('No text found. Is this a real .docx file?');
+    var xml=await entry.async('string'),dom=new DOMParser().parseFromString(xml,'application/xml'),ps=dom.getElementsByTagNameNS('*','p'),out=[];
+    for(var i=0;i<ps.length;i++){
+      var line='',nodes=ps[i].getElementsByTagNameNS('*','*');
+      for(var j=0;j<nodes.length;j++){
+        var ln=nodes[j].localName;
+        if(ln==='t')line+=nodes[j].textContent;else if(ln==='tab')line+='\t';else if(ln==='br')line+='\n';
+      }
+      out.push(line);
+    }
+    return out.join('\n').replace(/\n{3,}/g,'\n\n').trim();
+  }
+  window.__docxText=docxText;
+  $('d-file').addEventListener('change',async function(){
+    var f=this.files[0];hideOut('d');if(!f)return;
+    if(!/\.docx$/i.test(f.name)){setMsg('d-msg','Please choose a .docx file. Old .doc files must be saved as .docx in Word first.',true);return;}
+    if(typeof JSZip==='undefined'){setMsg('d-msg','The ZIP library could not load. Check your internet and reload.',true);return;}
+    setMsg('d-msg','Reading...');
+    try{
+      var t=await docxText(await f.arrayBuffer());
+      if(!t){setMsg('d-msg','This document has no text.',true);return;}
+      showOut('d',t);setMsg('d-msg','Done.');
+    }catch(e){setMsg('d-msg',e.message&&e.message.indexOf('No text')===0?e.message:'Could not read this file. It may be damaged or password protected.',true);}
+  });
+
+  // ---- links / emails / phones ----
+  function uniq(a){var s={},o=[];a.forEach(function(x){if(!s[x]){s[x]=1;o.push(x);}});return o;}
+  function extractAll(t){
+    var links=uniq((t.match(/(?:https?:\/\/|www\.)[^\s<>"')\]]+/gi)||[]).map(function(x){return x.replace(/[.,;:!?]+$/,'');}));
+    var mails=uniq((t.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g)||[]).map(function(x){return x.replace(/[.,;:!?]+$/,'');}));
+    var phones=uniq((t.replace(/[\s-]/g,'').match(/(?:\+91|91|0)?[6-9]\d{9}(?!\d)/g)||[]).map(function(x){return x.slice(-10);}));
+    return {links:links,mails:mails,phones:phones};
+  }
+  window.__extractAll=extractAll;
+  $('l-go').addEventListener('click',function(){
+    var t=$('l-in').value,box=$('l-out');box.innerHTML='';
+    if(!t.trim()){setMsg('l-msg','Please paste some text first.',true);return;}
+    var r=extractAll(t);
+    setMsg('l-msg','Found '+r.links.length+' link(s), '+r.mails.length+' email(s), '+r.phones.length+' phone number(s).');
+    [['Links',r.links],['Emails',r.mails],['Phone numbers',r.phones]].forEach(function(g){
+      if(!g[1].length)return;
+      var d=document.createElement('div');d.className='item';
+      var h=document.createElement('div');h.className='t';h.textContent=g[0]+' ('+g[1].length+')';
+      var ta=document.createElement('textarea');ta.readOnly=true;ta.value=g[1].join('\n');ta.style.minHeight='80px';
+      var b=document.createElement('button');b.className='go alt';b.textContent='Copy';
+      b.addEventListener('click',function(){copyText(ta.value,function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},1500);});});
+      d.appendChild(h);d.appendChild(ta);d.appendChild(b);box.appendChild(d);
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

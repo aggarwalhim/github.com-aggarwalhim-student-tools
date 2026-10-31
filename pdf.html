@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free PDF Tools: Rotate, Page Numbers, Watermark, Compress</title>
+<meta name="description" content="Free PDF tools: rotate pages, add page numbers, add a watermark and compress PDF size. Works in your browser; files are not uploaded.">
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5d6678;--accent:#b3261e;--accent-d:#8c1d17;--line:#e1e5ee;--warn:#fff4e0;--warn-t:#7a4a00;--good:#1a8f4d;--bad:#d33;}
+  @media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ecf4;--muted:#9aa4b8;--accent:#ff8a80;--accent-d:#ffaba3;--line:#2b3240;--warn:#3a2d12;--warn-t:#ffd58a;--good:#4cd48a;--bad:#ff7a7a;}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header,main,footer,nav{max-width:760px;margin:0 auto;padding:0 16px}
+  nav{padding-top:14px;font-size:.92rem}
+  nav a{margin-right:12px;display:inline-block}
+  header{padding-top:14px;padding-bottom:8px}
+  h1{margin:0 0 4px;font-size:1.6rem}
+  h3{margin:18px 0 4px;font-size:1rem}
+  .sub{color:var(--muted);margin:0}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-size:.92rem;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 4px;font-size:1.15rem}
+  label{display:block;margin:12px 0 6px;font-weight:600;font-size:.92rem}
+  label.inl{display:flex;gap:8px;align-items:center;font-weight:400}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+  input[type=checkbox]{width:auto}
+  input[type=range]{padding:0}
+  textarea{min-height:120px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  button.go{margin-top:12px;background:var(--accent);color:#fff;border:0;padding:11px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;width:100%}
+  button.go:hover{background:var(--accent-d)}
+  button.alt{background:var(--card);color:var(--text);border:1px solid var(--line)}
+  button.go:disabled{opacity:.6;cursor:wait}
+  .res{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;word-break:break-word;min-height:20px;white-space:pre-wrap}
+  .warn{margin:12px 0;padding:10px 12px;border-radius:8px;background:var(--warn);color:var(--warn-t);font-size:.92rem}
+  .item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;word-break:break-word}
+  .item .t{font-weight:600}
+  code{background:var(--bg);padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+  a{color:var(--accent)}
+  footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
+  .ad{margin:16px 0;min-height:90px;border:1px dashed var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem}
+  [hidden]{display:none!important}
+  #print-area{display:none}
+  @media print{
+    @page{margin:14mm}
+    body.printing>*:not(#print-area){display:none!important}
+    body.printing #print-area{display:block!important;color:#000;background:#fff;font:11pt/1.45 system-ui,Arial,sans-serif}
+    body.printing{background:#fff}
+  }
+</style>
+</head>
+<body>
+<nav><a href="index.html">Student Tools</a><a href="study.html">Study</a><a href="pharmacy.html">Pharmacy</a><a href="files.html">Files</a><a href="pdf.html"><strong>PDF</strong></a><a href="extract.html">Extract</a><a href="career.html">Career</a><a href="writing.html">Writing</a><a href="ppt.html">PPT</a></nav>
+<header>
+  <h1>PDF Tools</h1>
+  <p class="sub">Rotate pages, add page numbers or a watermark, and make a PDF smaller. Your files stay on your device.</p>
+</header>
+
+<main>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="rot">Rotate</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="num">Page Numbers</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="wm">Watermark</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cmp">Compress</button>
+  </div>
+
+  <!-- AD SLOT 1: paste your ad code here after your ad account is approved -->
+  <div class="ad">Ad space</div>
+
+  <section class="card" id="tab-rot">
+    <h2>Rotate PDF Pages</h2>
+    <label for="r-file">Choose a PDF</label>
+    <input id="r-file" type="file" accept="application/pdf">
+    <div class="row">
+      <div><label for="r-angle">Rotate</label><select id="r-angle"><option value="90">90° right</option><option value="180">180°</option><option value="270">90° left</option></select></div>
+      <div><label for="r-pages">Pages (empty = all)</label><input id="r-pages" type="text" placeholder="e.g. 1-3, 5"></div>
+    </div>
+    <button class="go" id="r-go">Rotate &amp; download</button>
+    <div class="res" id="r-msg"></div>
+  </section>
+
+  <section class="card" id="tab-num" hidden>
+    <h2>Add Page Numbers</h2>
+    <label for="n-file">Choose a PDF</label>
+    <input id="n-file" type="file" accept="application/pdf">
+    <div class="row">
+      <div><label for="n-pos">Position</label><select id="n-pos"><option value="bc">Bottom centre</option><option value="br">Bottom right</option><option value="bl">Bottom left</option><option value="tc">Top centre</option><option value="tr">Top right</option></select></div>
+      <div><label for="n-fmt">Style</label><select id="n-fmt"><option value="n">1, 2, 3</option><option value="of">Page 1 of 10</option></select></div>
+    </div>
+    <div class="row">
+      <div><label for="n-start">First number</label><input id="n-start" type="number" value="1" step="1"></div>
+      <div><label for="n-size">Size</label><select id="n-size"><option value="10">Small</option><option value="12" selected>Medium</option><option value="16">Large</option></select></div>
+    </div>
+    <label class="inl"><input type="checkbox" id="n-skip"> Do not number the first page (cover page)</label>
+    <button class="go" id="n-go">Add numbers &amp; download</button>
+    <div class="res" id="n-msg"></div>
+  </section>
+
+  <section class="card" id="tab-wm" hidden>
+    <h2>Add Watermark</h2>
+    <label for="w-file">Choose a PDF</label>
+    <input id="w-file" type="file" accept="application/pdf">
+    <label for="w-text">Watermark text (English letters)</label>
+    <input id="w-text" type="text" value="CONFIDENTIAL">
+    <div class="row">
+      <div><label for="w-op">Strength</label><select id="w-op"><option value="0.15">Light</option><option value="0.3" selected>Medium</option><option value="0.5">Dark</option></select></div>
+      <div><label for="w-ang">Direction</label><select id="w-ang"><option value="45">Diagonal</option><option value="0">Straight</option></select></div>
+    </div>
+    <button class="go" id="w-go">Add watermark &amp; download</button>
+    <div class="res" id="w-msg"></div>
+  </section>
+
+  <section class="card" id="tab-cmp" hidden>
+    <h2>Compress PDF</h2>
+    <div class="warn">This makes each page a smaller picture, so the PDF gets lighter but its <strong>text can no longer be selected or searched</strong>. Best for scanned documents and forms that need a smaller file.</div>
+    <label for="c-file">Choose a PDF</label>
+    <input id="c-file" type="file" accept="application/pdf">
+    <label for="c-q">Quality</label>
+    <select id="c-q"><option value="hi">High (bigger file)</option><option value="mid" selected>Medium</option><option value="lo">Low (smallest file)</option></select>
+    <button class="go" id="c-go">Compress &amp; download</button>
+    <div class="res" id="c-msg">Up to 60 pages.</div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad">Ad space</div>
+</main>
+
+<footer><p>Privacy: everything runs in your browser. Your files and text are not sent to any server.</p></footer>
+<div id="print-area"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script>
+(function(){
+
+  var $=function(id){return document.getElementById(id);};
+  function setMsg(id,t,err){var e=$(id);e.textContent=t;e.style.color=err?'#d33':'';}
+  function baseName(n){return n.replace(/\.[^.]+$/,'');}
+  function downloadBlob(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();}
+  function fmtSize(n){return n>=1048576?(n/1048576).toFixed(2)+' MB':Math.max(1,Math.round(n/1024))+' KB';}
+  function copyText(t,done){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){prompt('Copy this:',t);});}else{prompt('Copy this:',t);}}
+  function loadImage(file){return new Promise(function(res,rej){var u=URL.createObjectURL(file),im=new Image();im.onload=function(){URL.revokeObjectURL(u);res(im);};im.onerror=function(){URL.revokeObjectURL(u);rej(new Error('Could not read this image.'));};im.src=u;});}
+  function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function load(k,d){try{var s=localStorage.getItem(k);return s?JSON.parse(s):d;}catch(e){return d;}}
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.addEventListener('click',function(){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on?'true':'false');$('tab-'+x.dataset.tab).hidden=!on;});});});
+
+  var PDFJS_VER='6.2.108',pdfjsPromise=null;
+  function getPdfjs(){
+    if(!pdfjsPromise){
+      var base='https://cdn.jsdelivr.net/npm/pdfjs-dist@'+PDFJS_VER+'/legacy/build/';
+      pdfjsPromise=import(base+'pdf.min.mjs').then(function(m){m.GlobalWorkerOptions.workerSrc=base+'pdf.worker.min.mjs';return m;});
+      pdfjsPromise.catch(function(){pdfjsPromise=null;});
+    }
+    return pdfjsPromise;
+  }
+  window.__setPdfjsLoader=function(f){getPdfjs=f;};
+
+  function parseRanges(str,max){
+    var out=[],parts=str.split(',');
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i].trim();if(!p)continue;
+      var m=p.match(/^(\d+)(?:\s*-\s*(\d+))?$/);if(!m)return null;
+      var a=parseInt(m[1],10),b=m[2]?parseInt(m[2],10):a;
+      if(a<1||b<a||b>max)return null;
+      for(var k=a;k<=b;k++)out.push(k-1);
+    }
+    return out.length?out:null;
+  }
+  window.__parseRanges=parseRanges;
+  async function openPdf(fileId,msgId){
+    var f=$(fileId).files[0];
+    if(!f){setMsg(msgId,'Please choose a PDF first.',true);return null;}
+    if(!window.PDFLib){setMsg(msgId,'PDF library could not load. Check your internet and reload.',true);return null;}
+    try{return {doc:await PDFLib.PDFDocument.load(await f.arrayBuffer()),file:f};}
+    catch(e){setMsg(msgId,'Could not open this PDF (it may be locked or damaged).',true);return null;}
+  }
+  function guard(btnId,fn){
+    $(btnId).addEventListener('click',async function(){
+      var b=this;b.disabled=true;
+      try{await fn();}catch(e){setMsg(b.dataset.msg,(e&&e.message)||'Something went wrong.',true);}
+      b.disabled=false;
+    });
+  }
+  $('r-go').dataset.msg='r-msg';$('n-go').dataset.msg='n-msg';$('w-go').dataset.msg='w-msg';$('c-go').dataset.msg='c-msg';
+
+  // ---- rotate ----
+  guard('r-go',async function(){
+    var o=await openPdf('r-file','r-msg');if(!o)return;
+    var n=o.doc.getPageCount(),txt=$('r-pages').value.trim(),idx;
+    if(txt){idx=parseRanges(txt,n);if(!idx){setMsg('r-msg','Pages not understood. Use numbers like 1-3, 5 (1 to '+n+').',true);return;}}
+    else{idx=[];for(var i=0;i<n;i++)idx.push(i);}
+    var d=parseInt($('r-angle').value,10);
+    idx.forEach(function(i){var p=o.doc.getPage(i);p.setRotation(PDFLib.degrees(((p.getRotation().angle+d)%360+360)%360));});
+    downloadBlob(new Blob([await o.doc.save()],{type:'application/pdf'}),baseName(o.file.name)+'-rotated.pdf');
+    setMsg('r-msg','Done: '+idx.length+' page(s) rotated.');
+  });
+
+  // ---- page numbers ----
+  guard('n-go',async function(){
+    var o=await openPdf('n-file','n-msg');if(!o)return;
+    var font=await o.doc.embedFont(PDFLib.StandardFonts.Helvetica),pages=o.doc.getPages(),n=pages.length;
+    var start=parseInt($('n-start').value,10);if(isNaN(start))start=1;
+    var size=parseInt($('n-size').value,10),pos=$('n-pos').value,of=$('n-fmt').value==='of',skip=$('n-skip').checked;
+    pages.forEach(function(p,i){
+      if(skip&&i===0)return;
+      var num=start+i,t=of?'Page '+num+' of '+(start+n-1):String(num),sz=p.getSize(),w=font.widthOfTextAtSize(t,size);
+      var x=pos[1]==='l'?36:pos[1]==='r'?sz.width-36-w:(sz.width-w)/2;
+      var y=pos[0]==='b'?24:sz.height-24-size;
+      p.drawText(t,{x:x,y:y,size:size,font:font,color:PDFLib.rgb(0,0,0)});
+    });
+    downloadBlob(new Blob([await o.doc.save()],{type:'application/pdf'}),baseName(o.file.name)+'-numbered.pdf');
+    setMsg('n-msg','Done: numbers added to '+(skip?n-1:n)+' page(s).');
+  });
+
+  // ---- watermark ----
+  guard('w-go',async function(){
+    var text=$('w-text').value.trim();
+    if(!text){setMsg('w-msg','Please type the watermark text.',true);return;}
+    var o=await openPdf('w-file','w-msg');if(!o)return;
+    var font=await o.doc.embedFont(PDFLib.StandardFonts.HelveticaBold),w1;
+    try{w1=font.widthOfTextAtSize(text,1);}catch(e){setMsg('w-msg','The watermark can only use English letters, numbers and common symbols.',true);return;}
+    var ang=parseInt($('w-ang').value,10),th=ang*Math.PI/180,op=parseFloat($('w-op').value);
+    o.doc.getPages().forEach(function(p){
+      var s=p.getSize(),cx=s.width/2,cy=s.height/2;
+      var avail=ang?Math.sqrt(s.width*s.width+s.height*s.height)*0.7:s.width*0.8;
+      var size=Math.max(10,Math.min(120,avail/w1)),tw=w1*size,hh=size*0.35;
+      var x=cx-(tw/2*Math.cos(th)-hh*Math.sin(th)),y=cy-(tw/2*Math.sin(th)+hh*Math.cos(th));
+      p.drawText(text,{x:x,y:y,size:size,font:font,color:PDFLib.rgb(0.45,0.45,0.45),opacity:op,rotate:PDFLib.degrees(ang)});
+    });
+    downloadBlob(new Blob([await o.doc.save()],{type:'application/pdf'}),baseName(o.file.name)+'-watermarked.pdf');
+    setMsg('w-msg','Done: watermark added.');
+  });
+
+  // ---- compress ----
+  guard('c-go',async function(){
+    var f=$('c-file').files[0];
+    if(!f){setMsg('c-msg','Please choose a PDF first.',true);return;}
+    if(!window.PDFLib){setMsg('c-msg','PDF library could not load. Check your internet and reload.',true);return;}
+    var q={hi:[1600,0.8],mid:[1100,0.62],lo:[750,0.45]}[$('c-q').value];
+    setMsg('c-msg','Loading PDF reader...');
+    var lib;
+    try{lib=await getPdfjs();}catch(e){setMsg('c-msg','Could not load the PDF reader. Check your internet and try again.',true);return;}
+    var buf=await f.arrayBuffer(),doc;
+    try{doc=await lib.getDocument({data:new Uint8Array(buf.slice(0))}).promise;}
+    catch(e){setMsg('c-msg',/password/i.test(e&&e.message||'')?'This PDF is password protected.':'Could not open this PDF.',true);return;}
+    var n=doc.numPages;
+    if(n>60){setMsg('c-msg','This PDF has '+n+' pages. The limit is 60.',true);return;}
+    var out=await PDFLib.PDFDocument.create();
+    for(var i=1;i<=n;i++){
+      setMsg('c-msg','Compressing page '+i+' of '+n+'...');
+      var page=await doc.getPage(i),v1=page.getViewport({scale:1}),sc=Math.min(2,q[0]/v1.width),vp=page.getViewport({scale:sc});
+      var c=document.createElement('canvas');c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+      var ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
+      await page.render({canvasContext:ctx,canvas:c,viewport:vp}).promise;
+      var blob=await new Promise(function(r){c.toBlob(r,'image/jpeg',q[1]);});
+      var img=await out.embedJpg(await blob.arrayBuffer()),pg=out.addPage([v1.width,v1.height]);
+      pg.drawImage(img,{x:0,y:0,width:v1.width,height:v1.height});
+    }
+    var bytes=await out.save();
+    downloadBlob(new Blob([bytes],{type:'application/pdf'}),baseName(f.name)+'-compressed.pdf');
+    setMsg('c-msg','Done: '+fmtSize(f.size)+' → '+fmtSize(bytes.length)+(bytes.length>=f.size?'. The new file is not smaller — try Low quality, or this PDF is already small.':'.'));
+  });
+
+})();
+</script>
+</body>
+</html>
