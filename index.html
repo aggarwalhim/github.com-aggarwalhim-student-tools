@@ -34,15 +34,90 @@
   footer{padding-top:8px;padding-bottom:32px;color:var(--muted);font-size:.88rem}
   [hidden]{display:none!important}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%231b2a6b%27/%3E%3Crect x=%2714%27 y=%2726%27 width=%2736%27 height=%2712%27 fill=%27%23ffe66d%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="site.css">
 </head>
 <body>
-<nav style="max-width:760px;margin:0 auto;padding:14px 16px 0;font-size:.92rem"><a href="index.html"><strong>Student Tools</strong></a> &nbsp; <a href="study.html">Study</a> &nbsp; <a href="pharmacy.html">Pharmacy</a> &nbsp; <a href="files.html">Files</a> &nbsp; <a href="pdf.html">PDF</a> &nbsp; <a href="extract.html">Extract</a> &nbsp; <a href="career.html">Career</a> &nbsp; <a href="writing.html">Writing</a> &nbsp; <a href="ppt.html">PPT</a></nav>
+<nav><a href="index.html">Student Tools</a>  <a href="study.html">Study</a>  <a href="pharmacy.html">Pharmacy</a>  <a href="files.html">Files</a>  <a href="pdf.html">PDF</a>  <a href="extract.html">Extract</a>  <a href="career.html">Career</a>  <a href="writing.html">Writing</a>  <a href="ppt.html">PPT</a></nav>
 <header>
   <h1>Free Student Tools</h1>
   <p class="sub">Handy tools for everyday study work. They run on your device — nothing is uploaded.</p>
 </header>
 
 <main>
+<div class="finder"><label for="finder-q">What do you need?</label><input id="finder-q" type="search" placeholder="Try: pdf, photo, resume, dose..." autocomplete="off"><p class="hint" id="finder-hint"></p></div>
+<section class="toc" aria-label="All tools">
+<div class="toc-group"><h2>Quick tools</h2><ul>
+<li data-k="qr code quick tools index"><a href="index.html#qr"><span class="nm">QR Code</span><span class="lead"></span></a></li>
+<li data-k="word counter quick tools index"><a href="index.html#words"><span class="nm">Word Counter</span><span class="lead"></span></a></li>
+<li data-k="age / dates quick tools index"><a href="index.html#age"><span class="nm">Age / Dates</span><span class="lead"></span></a></li>
+<li data-k="unit converter quick tools index"><a href="index.html#units"><span class="nm">Unit Converter</span><span class="lead"></span></a></li>
+<li data-k="password quick tools index"><a href="index.html#pass"><span class="nm">Password</span><span class="lead"></span></a></li>
+<li data-k="text tools quick tools index"><a href="index.html#text"><span class="nm">Text Tools</span><span class="lead"></span></a></li>
+<li data-k="image resizer quick tools index"><a href="index.html#resize"><span class="nm">Image Resizer</span><span class="lead"></span></a></li>
+<li data-k="notes quick tools index"><a href="index.html#notes"><span class="nm">Notes</span><span class="lead"></span></a></li>
+<li data-k="ask ai quick tools index"><a href="index.html#ai"><span class="nm">Ask AI</span><span class="lead"></span></a></li>
+</ul></div>
+<div class="toc-group"><h2>Study</h2><ul>
+<li data-k="exam countdown study study"><a href="study.html#exam"><span class="nm">Exam Countdown</span><span class="lead"></span></a></li>
+<li data-k="flashcards study study"><a href="study.html#cards"><span class="nm">Flashcards</span><span class="lead"></span></a></li>
+<li data-k="notes → flashcards study study"><a href="study.html#n2c"><span class="nm">Notes → Flashcards</span><span class="lead"></span></a></li>
+<li data-k="typing test study study"><a href="study.html#type"><span class="nm">Typing Test</span><span class="lead"></span></a></li>
+<li data-k="sgpa study study"><a href="study.html#sgpa"><span class="nm">SGPA</span><span class="lead"></span></a></li>
+<li data-k="emi / gst / discount study study"><a href="study.html#money"><span class="nm">EMI / GST / Discount</span><span class="lead"></span></a></li>
+<li data-k="bmi study study"><a href="study.html#bmi"><span class="nm">BMI</span><span class="lead"></span></a></li>
+</ul></div>
+<div class="toc-group"><h2>Pharmacy</h2><ul>
+<li data-k="molarity / normality pharmacy pharmacy"><a href="pharmacy.html#sol"><span class="nm">Molarity / Normality</span><span class="lead"></span></a></li>
+<li data-k="dilution pharmacy pharmacy"><a href="pharmacy.html#dil"><span class="nm">Dilution</span><span class="lead"></span></a></li>
+<li data-k="dose by weight pharmacy pharmacy"><a href="pharmacy.html#dose"><span class="nm">Dose by Weight</span><span class="lead"></span></a></li>
+<li data-k="alligation / % strength pharmacy pharmacy"><a href="pharmacy.html#allig"><span class="nm">Alligation / % Strength</span><span class="lead"></span></a></li>
+<li data-k="drug flashcards pharmacy pharmacy"><a href="pharmacy.html#flash"><span class="nm">Drug Flashcards</span><span class="lead"></span></a></li>
+<li data-k="viva questions pharmacy pharmacy"><a href="pharmacy.html#viva"><span class="nm">Viva Questions</span><span class="lead"></span></a></li>
+</ul></div>
+<div class="toc-group"><h2>Files and images</h2><ul>
+<li data-k="crop &amp; rotate files and images files"><a href="files.html#crop"><span class="nm">Crop &amp; Rotate</span><span class="lead"></span></a></li>
+<li data-k="remove plain background files and images files"><a href="files.html#bg"><span class="nm">Remove Plain Background</span><span class="lead"></span></a></li>
+<li data-k="split pdf files and images files"><a href="files.html#split"><span class="nm">Split PDF</span><span class="lead"></span></a></li>
+<li data-k="text to pdf files and images files"><a href="files.html#txt"><span class="nm">Text to PDF</span><span class="lead"></span></a></li>
+<li data-k="passport photo files and images files"><a href="files.html#pass"><span class="nm">Passport Photo</span><span class="lead"></span></a></li>
+<li data-k="images to pdf files and images files"><a href="files.html#i2p"><span class="nm">Images to PDF</span><span class="lead"></span></a></li>
+<li data-k="merge pdfs files and images files"><a href="files.html#merge"><span class="nm">Merge PDFs</span><span class="lead"></span></a></li>
+<li data-k="exact kb size files and images files"><a href="files.html#kb"><span class="nm">Exact KB Size</span><span class="lead"></span></a></li>
+</ul></div>
+<div class="toc-group"><h2>PDF tools</h2><ul>
+<li data-k="rotate pdf tools pdf"><a href="pdf.html#rot"><span class="nm">Rotate</span><span class="lead"></span></a></li>
+<li data-k="page numbers pdf tools pdf"><a href="pdf.html#num"><span class="nm">Page Numbers</span><span class="lead"></span></a></li>
+<li data-k="watermark pdf tools pdf"><a href="pdf.html#wm"><span class="nm">Watermark</span><span class="lead"></span></a></li>
+<li data-k="compress pdf tools pdf"><a href="pdf.html#cmp"><span class="nm">Compress</span><span class="lead"></span></a></li>
+</ul></div>
+<div class="toc-group"><h2>Extract text</h2><ul>
+<li data-k="image → text (ocr) extract text extract"><a href="extract.html#ocr"><span class="nm">Image → Text (OCR)</span><span class="lead"></span></a></li>
+<li data-k="pdf → text extract text extract"><a href="extract.html#pdf"><span class="nm">PDF → Text</span><span class="lead"></span></a></li>
+<li data-k="word → text extract text extract"><a href="extract.html#doc"><span class="nm">Word → Text</span><span class="lead"></span></a></li>
+<li data-k="links / emails extract text extract"><a href="extract.html#lnk"><span class="nm">Links / Emails</span><span class="lead"></span></a></li>
+</ul></div>
+<div class="toc-group"><h2>Career</h2><ul>
+<li data-k="resume maker career career"><a href="career.html#res"><span class="nm">Resume Maker</span><span class="lead"></span></a></li>
+<li data-k="letter maker career career"><a href="career.html#let"><span class="nm">Letter Maker</span><span class="lead"></span></a></li>
+<li data-k="resume checker career career"><a href="career.html#chk"><span class="nm">Resume Checker</span><span class="lead"></span></a></li>
+</ul></div>
+<div class="toc-group"><h2>Writing and citations</h2><ul>
+<li data-k="citation finder writing and citations writing"><a href="writing.html#cite"><span class="nm">Citation Finder</span><span class="lead"></span></a></li>
+<li data-k="citation maker writing and citations writing"><a href="writing.html#man"><span class="nm">Citation Maker</span><span class="lead"></span></a></li>
+<li data-k="similarity check writing and citations writing"><a href="writing.html#sim"><span class="nm">Similarity Check</span><span class="lead"></span></a></li>
+<li data-k="link maker writing and citations writing"><a href="writing.html#lnk"><span class="nm">Link Maker</span><span class="lead"></span></a></li>
+</ul></div>
+<div class="toc-group"><h2>Presentations</h2><ul>
+<li data-k="images → ppt presentations ppt"><a href="ppt.html#img"><span class="nm">Images → PPT</span><span class="lead"></span></a></li>
+<li data-k="text → ppt presentations ppt"><a href="ppt.html#txt"><span class="nm">Text → PPT</span><span class="lead"></span></a></li>
+<li data-k="pdf → ppt presentations ppt"><a href="ppt.html#pdf"><span class="nm">PDF → PPT</span><span class="lead"></span></a></li>
+<li data-k="pptx → text presentations ppt"><a href="ppt.html#ext"><span class="nm">PPTX → Text</span><span class="lead"></span></a></li>
+</ul></div>
+<p id="toc-empty" class="sub" hidden>Nothing matches. Try a shorter word, like pdf, photo or resume.</p></section>
+<h2 id="quick">Quick tools</h2>
   <div class="tabs" role="tablist" id="tabs">
     <button class="tab" role="tab" aria-selected="true" data-tab="qr">QR Code</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="words">Word Counter</button>
@@ -176,7 +251,7 @@
     <a id="sh-tg" href="#" target="_blank" rel="noopener">Telegram</a> ·
     <a href="#" id="sh-copy">Copy link</a>
   </p>
-  <p>Privacy: everything happens in your browser. Nothing is sent to a server.</p>
+  <p>Privacy: everything happens in your browser. Nothing is sent to a server. <a href="privacy.html">Privacy policy</a></p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -370,5 +445,6 @@
   });
 })();
 </script>
+<script src="site.js"></script>
 </body>
 </html>
